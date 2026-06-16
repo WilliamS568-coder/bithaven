@@ -48,7 +48,7 @@ app.post('/api/upload-receipt', upload.single('receipt'), async (req, res) => {
 
         // Upload the raw file buffer directly into your Supabase Storage Bucket
         const { data, error } = await supabase.storage
-            .from(BUCKET_NAME)
+            .from(receipts)
             .upload(filename, req.file.buffer, {
                 contentType: req.file.mimetype,
                 upsert: true

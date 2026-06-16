@@ -8,28 +8,15 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // --- 1. MIDDLEWARE SYSTEM ---
-// Added explicit body parsing streams to avoid "Cannot destructure property 'phone' of 'req.body'"
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Serve the root folder files statically (index.html, admin.html, etc.)
 app.use(express.static(__dirname));
 
-// Serve the uploads folder statically so images display natively instead of hitting a 404/undefined
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-
-// --- 2. MULTER DISK STORAGE ENGINE ---
-// Replaced memoryStorage with customized diskStorage to preserve proper image file extensions
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'uploads/');
-    },
-    filename: function (req, file, cb) {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        const ext = path.extname(file.originalname);
-        cb(null, 'receipt-' + uniqueSuffix + ext);
-    }
-});
+// --- 2. MULTER MEMORY STORAGE CONFIGURATION ---
+// We switch to memoryStorage because we are streaming the file data directly to Supabase Storage
+const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 // --- 3. SUPABASE CONNECTION ---
@@ -42,22 +29,43 @@ if (!SUPABASE_SERVICE_KEY && !SUPABASE_ANON_KEY) {
     process.exit(1);
 }
 
+// Using Service Key (if available) allows overriding security policies for seamless storage uploads
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY || SUPABASE_ANON_KEY);
 const TABLE_NAME = 'users';
+const BUCKET_NAME = 'receipts'; // Make sure to create a public bucket named 'receipts' in your Supabase Dashboard
 
-// --- 4. FILE UPLOAD ENDPOINT ---
-// Custom route configured to handle frontend form drops matching the 'receipt' name signature
-app.post('/api/upload-receipt', upload.single('receipt'), (req, res) => {
+// --- 4. SUPABASE CLOUD FILE UPLOAD ENDPOINT ---
+app.post('/api/upload-receipt', upload.single('receipt'), async (req, res) => {
     try {
         if (!req.file) {
             return res.status(400).json({ success: false, message: 'No file received.' });
         }
-        
-        // Formulate the local server path to save into the user's bill profile arrays
-        const fileUrl = `/uploads/${req.file.filename}`;
+
+        // Generate a clean, unique file path name
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        const ext = path.extname(req.file.originalname);
+        const filename = `receipt-${uniqueSuffix}${ext}`;
+
+        // Upload the raw file buffer directly into your Supabase Storage Bucket
+        const { data, error } = await supabase.storage
+            .from(BUCKET_NAME)
+            .upload(filename, req.file.buffer, {
+                contentType: req.file.mimetype,
+                upsert: true
+            });
+
+        if (error) throw error;
+
+        // Formulate the permanent public URL pointing directly to your Supabase asset
+        const { data: publicUrlData } = supabase.storage
+            .from(BUCKET_NAME)
+            .getPublicUrl(filename);
+
+        const fileUrl = publicUrlData.publicUrl;
         return res.json({ success: true, fileUrl: fileUrl });
+
     } catch (err) {
-        console.error("Upload routing fault:", err);
+        console.error("Cloud Upload routing fault:", err);
         return res.status(500).json({ success: false, message: err.message });
     }
 });
@@ -186,7 +194,6 @@ app.get('/api/admin/users', async (req, res) => {
     }
 });
 
-// --- NEW ROUTE FOR APPROVING RECHARGES ---
 app.post('/api/admin/approve-recharge', async (req, res) => {
     try {
         const { phone, billId } = req.body;
@@ -194,7 +201,6 @@ app.post('/api/admin/approve-recharge', async (req, res) => {
             return res.status(400).json({ success: false, message: 'Missing phone or billId.' });
         }
 
-        // 1. Fetch user records from Supabase
         const { data: user, error: fetchErr } = await supabase
             .from(TABLE_NAME)
             .select('*')
@@ -203,29 +209,24 @@ app.post('/api/admin/approve-recharge', async (req, res) => {
 
         if (fetchErr || !user) return res.status(444).json({ success: false, message: 'User not found.' });
 
-        // 2. Parse their bills array safely
         let bills = [];
         try {
             bills = typeof user.bills === 'string' ? JSON.parse(user.bills) : (user.bills || []);
         } catch(e) { bills = []; }
 
-        // 3. Find the exact bill transaction card matching the ID
         const billIndex = bills.findIndex(b => b.id === billId);
         if (billIndex === -1) {
             return res.status(404).json({ success: false, message: 'Transaction ID not found.' });
         }
 
-        // If it's already approved, stop here
         if (bills[billIndex].status === 'Approved') {
             return res.status(400).json({ success: false, message: 'This receipt was already approved.' });
         }
 
-        // 4. Update status and increment balance pool numbers
         const depositAmount = Number(bills[billIndex].amount || 0);
         bills[billIndex].status = 'Approved';
         const newBalance = Number(user.balance || 0) + depositAmount;
 
-        // 5. Save everything back down into Supabase
         const { error: updateErr } = await supabase
             .from(TABLE_NAME)
             .update({

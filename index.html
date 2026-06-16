@@ -126,9 +126,7 @@
             <div class="bg-cardBg border border-gray-800 rounded-2xl p-5 relative overflow-hidden">
                 <h3 class="text-sm font-semibold text-gray-300 tracking-wide uppercase mb-1">Turn Idle Storage Into Passive Income</h3>
                 <h2 class="text-xl font-black text-neonGreen mb-4">FEED DATA TO THE AI NETWORK</h2>
-                <button onclick="runNodeTest()" class="w-full bg-neonGreen text-black font-extrabold py-3.5 rounded-xl hover:bg-neonGreenHover transition-all text-sm tracking-wider uppercase shadow-lg shadow-neonGreen/20">
-                    Enter Node Test
-                </button>
+              
             </div>
 
             <div class="bg-cardBg p-4 rounded-2xl border border-gray-800 space-y-3">
@@ -806,7 +804,7 @@
             div.className = "flex justify-between items-center bg-zinc-900/60 p-2 rounded-xl border border-gray-800 text-xs h-[26px]";
             div.innerHTML = `
                 <span class="font-mono text-gray-400"><i class="fa-solid fa-user text-[10px] text-gray-600 mr-1"></i> Member ${scrambledPhone}</span>
-                <span class="text-gray-500">Deposited <b class="text-neonGreen">₦${amount.toLocaleString()}</b></span>
+                <span class="text-gray-500">Withdraw <b class="text-neonGreen">₦${amount.toLocaleString()}</b></span>
             `;
             return div;
         }
@@ -1047,7 +1045,7 @@
                 card.innerHTML = `
                     <div class="space-y-1">
                         <h4 class="text-sm font-bold text-white">${p.name}</h4>
-                        <div class="text-xs text-gray-400">Node Price: <span class="text-white font-medium">₦${p.price.toLocaleString()}</span></div>
+                        <div class="text-xs text-gray-400">Compute 1: <span class="text-white font-medium">₦${p.price.toLocaleString()}</span></div>
                         <div class="text-xs text-neonGreen">Daily Allocation: ₦${p.daily.toLocaleString()}</div>
                     </div>
                     ${actionButtonHtml}

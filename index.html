@@ -620,9 +620,9 @@
         function initTaskStore() {
             if (!localStorage.getItem('BH_TASKS')) {
                 const defaultTasks = [
-                    { id: 1, title: 'Stream Sponsor Data  Pipeline', reward: 3000 },
-                    { id: 2, title: 'Verify Data-Center Security Audit', reward: 3000 },
-                    { id: 3, title: 'Cache Third-Party AI Edge Stream', reward: 3000 }
+                    { id: 1, title: 'Stream Sponsor Data  Pipeline', reward: 200 },
+                    { id: 2, title: 'Verify Data-Center Security Audit', reward: 200 },
+                    { id: 3, title: 'Cache Third-Party AI Edge Stream', reward: 200}
                 ];
                 localStorage.setItem('BH_TASKS', JSON.stringify(defaultTasks));
             }

@@ -15,7 +15,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname));
 
 // --- 2. MULTER MEMORY STORAGE CONFIGURATION ---
-// We switch to memoryStorage because we are streaming the file data directly to Supabase Storage
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
@@ -29,10 +28,9 @@ if (!SUPABASE_SERVICE_KEY && !SUPABASE_ANON_KEY) {
     process.exit(1);
 }
 
-// Using Service Key (if available) allows overriding security policies for seamless storage uploads
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY || SUPABASE_ANON_KEY);
 const TABLE_NAME = 'users';
-const BUCKET_NAME = 'receipts'; // Make sure to create a public bucket named 'receipts' in your Supabase Dashboard
+const BUCKET_NAME = 'receipts'; 
 
 // --- 4. SUPABASE CLOUD FILE UPLOAD ENDPOINT ---
 app.post('/api/upload-receipt', upload.single('receipt'), async (req, res) => {
@@ -48,7 +46,7 @@ app.post('/api/upload-receipt', upload.single('receipt'), async (req, res) => {
 
         // Upload the raw file buffer directly into your Supabase Storage Bucket
         const { data, error } = await supabase.storage
-            .from(receipts)
+            .from(BUCKET_NAME)
             .upload(filename, req.file.buffer, {
                 contentType: req.file.mimetype,
                 upsert: true
@@ -56,7 +54,7 @@ app.post('/api/upload-receipt', upload.single('receipt'), async (req, res) => {
 
         if (error) throw error;
 
-        // Formulate the permanent public URL pointing directly to your Supabase asset
+        //  FIXED: Correct retrieval layout for getPublicUrl
         const { data: publicUrlData } = supabase.storage
             .from(BUCKET_NAME)
             .getPublicUrl(filename);

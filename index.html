@@ -12,44 +12,44 @@
             theme: {
                 extend: {
                     colors: {
-                        darkBg: '#0b0b0b',
-                        cardBg: '#161616',
-                        neonGreen: '#7cfc00',
-                        neonGreenHover: '#66d400',
-                        inputBg: '#1c1c1e'
+                        darkBg: '#f8f9fa',
+                        cardBg: '#ffffff',
+                        neonGreen: '#C59B27',
+                        neonGreenHover: '#A6801E',
+                        inputBg: '#f1f3f5'
                     }
                 }
             }
         }
     </script>
     <style>
-        body { background-color: #0b0b0b; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background-color: #f8f9fa; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         input, select, button { touch-action: manipulation; }
     </style>
 </head>
-<body class="text-gray-200 min-h-screen pb-24 selection:bg-neonGreen/30 selection:text-white">
+<body class="text-gray-800 min-h-screen pb-24 selection:bg-neonGreen/20 selection:text-gray-900">
 
-    <div id="toast-notification" class="fixed top-4 left-1/2 -translate-x-1/2 z-[100] w-11/12 max-w-sm bg-cardBg border border-red-500/30 p-4 rounded-xl shadow-2xl flex items-center gap-3 transform -translate-y-24 opacity-0 transition-all duration-300 pointer-events-none">
-        <div id="toast-icon-bg" class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 bg-red-500/10 text-red-400">
+    <div id="toast-notification" class="fixed top-4 left-1/2 -translate-x-1/2 z-[100] w-11/12 max-w-sm bg-cardBg border border-red-500/40 p-4 rounded-xl shadow-2xl flex items-center gap-3 transform -translate-y-24 opacity-0 transition-all duration-300 pointer-events-none">
+        <div id="toast-icon-bg" class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 bg-red-100 text-red-600">
             <i id="toast-icon" class="fa-solid fa-circle-exclamation"></i>
         </div>
         <div class="flex-1">
-            <h5 id="toast-title" class="text-xs font-bold text-white uppercase tracking-wider">Security Alert</h5>
-            <p id="toast-message" class="text-xs text-gray-400 mt-0.5">Invalid parameters signature.</p>
+            <h5 id="toast-title" class="text-xs font-bold text-gray-900 uppercase tracking-wider">Security Alert</h5>
+            <p id="toast-message" class="text-xs text-gray-600 mt-0.5">Invalid parameters signature.</p>
         </div>
     </div>
 
-    <div id="node-test-overlay" class="fixed inset-0 bg-black/95 z-[250] hidden flex flex-col items-center justify-center p-4">
-        <div class="bg-cardBg border border-gray-800 w-full max-w-md rounded-2xl p-5 space-y-4 font-mono text-left shadow-2xl">
-            <div class="flex justify-between items-center border-b border-gray-900 pb-2">
+    <div id="node-test-overlay" class="fixed inset-0 bg-white/95 z-[250] hidden flex flex-col items-center justify-center p-4">
+        <div class="bg-cardBg border border-gray-200 w-full max-w-md rounded-2xl p-5 space-y-4 font-mono text-left shadow-2xl">
+            <div class="flex justify-between items-center border-b border-gray-100 pb-2">
                 <span class="text-xs text-neonGreen font-bold tracking-widest uppercase animate-pulse">⚡ LIVE SYSTEM CORE HANDSHAKE</span>
                 <span class="text-xs text-gray-500" id="diagnostic-percent">0%</span>
             </div>
-            <div id="diagnostic-terminal" class="bg-darkBg text-xs p-4 rounded-xl border border-gray-900 h-48 overflow-y-auto space-y-1.5 hide-scrollbar text-gray-400">
+            <div id="diagnostic-terminal" class="bg-darkBg text-xs p-4 rounded-xl border border-gray-200 h-48 overflow-y-auto space-y-1.5 hide-scrollbar text-gray-600">
                 </div>
-            <div class="w-full bg-gray-900 h-1 rounded-full overflow-hidden">
+            <div class="w-full bg-gray-200 h-1 rounded-full overflow-hidden">
                 <div id="diagnostic-progress-bar" class="bg-neonGreen h-full w-0 transition-all duration-300"></div>
             </div>
         </div>
@@ -61,51 +61,51 @@
                 <div class="w-16 h-16 bg-neonGreen/10 rounded-2xl flex items-center justify-center mx-auto mb-3 border border-neonGreen/20">
                     <i class="fa-solid fa-cubes text-neonGreen text-3xl"></i>
                 </div>
-                <h1 class="text-3xl font-bold tracking-tight text-white">Bit Haven</h1>
-                <p class="text-sm text-gray-400 mt-1">Secure Compute Cloud Network</p>
+                <h1 class="text-3xl font-bold tracking-tight text-gray-950">Bit Haven</h1>
+                <p class="text-sm text-gray-600 mt-1">Secure Compute Cloud Network</p>
             </div>
 
-            <div class="flex bg-cardBg p-1 rounded-xl border border-gray-800">
-                <button type="button" id="toggle-login-btn" onclick="switchAuthTab('login')" class="w-1/2 py-2.5 text-sm font-medium rounded-lg bg-neonGreen text-black transition-all">Login</button>
-                <button type="button" id="toggle-register-btn" onclick="switchAuthTab('register')" class="w-1/2 py-2.5 text-sm font-medium rounded-lg text-gray-400 transition-all">Register</button>
+            <div class="flex bg-cardBg p-1 rounded-xl border border-gray-200 shadow-sm">
+                <button type="button" id="toggle-login-btn" onclick="switchAuthTab('login')" class="w-1/2 py-2.5 text-sm font-medium rounded-lg bg-neonGreen text-white transition-all">Login</button>
+                <button type="button" id="toggle-register-btn" onclick="switchAuthTab('register')" class="w-1/2 py-2.5 text-sm font-medium rounded-lg text-gray-500 transition-all">Register</button>
             </div>
 
             <form id="login-form" onsubmit="handleLogin(event)" class="space-y-4">
                 <div>
-                    <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5">Phone Number</label>
+                    <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-1.5">Phone Number</label>
                     <div class="relative">
                         <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500 text-sm">+234</span>
-                        <input type="tel" id="login-phone" required placeholder="8012345678" class="w-full bg-cardBg border border-gray-800 rounded-xl py-3.5 pl-14 pr-4 text-white focus:outline-none focus:border-neonGreen text-sm transition-colors">
+                        <input type="tel" id="login-phone" required placeholder="8012345678" class="w-full bg-cardBg border border-gray-200 rounded-xl py-3.5 pl-14 pr-4 text-gray-900 focus:outline-none focus:border-neonGreen text-sm transition-colors shadow-sm">
                     </div>
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5">Password</label>
-                    <input type="password" id="login-password" required placeholder="••••••••" class="w-full bg-cardBg border border-gray-800 rounded-xl p-3.5 text-white focus:outline-none focus:border-neonGreen text-sm transition-colors">
+                    <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-1.5">Password</label>
+                    <input type="password" id="login-password" required placeholder="••••••••" class="w-full bg-cardBg border border-gray-200 rounded-xl p-3.5 text-gray-900 focus:outline-none focus:border-neonGreen text-sm transition-colors shadow-sm">
                 </div>
-                <button type="submit" class="w-full bg-neonGreen text-black font-bold py-3.5 rounded-xl hover:bg-neonGreenHover transition-colors mt-2 shadow-lg shadow-neonGreen/10">Access Dashboard</button>
+                <button type="submit" class="w-full bg-neonGreen text-white font-bold py-3.5 rounded-xl hover:bg-neonGreenHover transition-colors mt-2 shadow-lg shadow-neonGreen/20">Access Dashboard</button>
             </form>
 
             <form id="register-form" onsubmit="handleRegister(event)" class="space-y-4 hidden">
                 <div>
-                    <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5">Phone Number</label>
+                    <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-1.5">Phone Number</label>
                     <div class="relative">
                         <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500 text-sm">+234</span>
-                        <input type="tel" id="reg-phone" required placeholder="8012345678" class="w-full bg-cardBg border border-gray-800 rounded-xl py-3.5 pl-14 pr-4 text-white focus:outline-none focus:border-neonGreen text-sm transition-colors">
+                        <input type="tel" id="reg-phone" required placeholder="8012345678" class="w-full bg-cardBg border border-gray-200 rounded-xl py-3.5 pl-14 pr-4 text-gray-900 focus:outline-none focus:border-neonGreen text-sm transition-colors shadow-sm">
                     </div>
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5">Create Login Password</label>
-                    <input type="password" id="reg-password" required placeholder="••••••••" class="w-full bg-cardBg border border-gray-800 rounded-xl p-3.5 text-white focus:outline-none focus:border-neonGreen text-sm transition-colors">
+                    <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-1.5">Create Login Password</label>
+                    <input type="password" id="reg-password" required placeholder="••••••••" class="w-full bg-cardBg border border-gray-200 rounded-xl p-3.5 text-gray-900 focus:outline-none focus:border-neonGreen text-sm transition-colors shadow-sm">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5">Create Withdrawal PIN (4 Digits)</label>
-                    <input type="password" id="reg-pin" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" required placeholder="••••" class="w-full bg-cardBg border border-gray-800 rounded-xl p-3.5 text-white focus:outline-none focus:border-neonGreen text-sm font-mono tracking-widest transition-colors">
+                    <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-1.5">Create Withdrawal PIN (4 Digits)</label>
+                    <input type="password" id="reg-pin" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" required placeholder="••••" class="w-full bg-cardBg border border-gray-200 rounded-xl p-3.5 text-gray-900 focus:outline-none focus:border-neonGreen text-sm font-mono tracking-widest transition-colors shadow-sm">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5">Referral Code (Optional)</label>
-                    <input type="text" id="reg-ref" placeholder="e.g. BW9GOR" class="w-full bg-cardBg border border-gray-800 rounded-xl p-3.5 text-white focus:outline-none focus:border-neonGreen text-sm transition-colors">
+                    <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-1.5">Referral Code (Optional)</label>
+                    <input type="text" id="reg-ref" placeholder="e.g. BW9GOR" class="w-full bg-cardBg border border-gray-200 rounded-xl p-3.5 text-gray-900 focus:outline-none focus:border-neonGreen text-sm transition-colors shadow-sm">
                 </div>
-                <button type="submit" class="w-full bg-neonGreen text-black font-bold py-3.5 rounded-xl hover:bg-neonGreenHover transition-colors mt-2 shadow-lg shadow-neonGreen/10">Create Cloud Account</button>
+                <button type="submit" class="w-full bg-neonGreen text-white font-bold py-3.5 rounded-xl hover:bg-neonGreenHover transition-colors mt-2 shadow-lg shadow-neonGreen/20">Create Cloud Account</button>
             </form>
         </div>
     </div>
@@ -115,23 +115,22 @@
         <div id="main-app-bar" class="flex items-center justify-between mb-6">
             <div class="flex items-center gap-2">
                 <i class="fa-solid fa-microchip text-neonGreen text-xl"></i>
-                <span class="font-bold text-lg tracking-wide text-white">BIT HAVEN</span>
+                <span class="font-bold text-lg tracking-wide text-gray-900">BIT HAVEN</span>
             </div>
             <div class="flex items-center gap-3">
-                <span class="bg-cardBg border border-gray-800 px-3 py-1 rounded-full text-xs text-gray-400 font-mono">ID: <span id="display-uid">---</span></span>
-                <button onclick="logout()" class="text-gray-400 hover:text-red-400 p-1"><i class="fa-solid fa-power-off"></i></button>
+                <span class="bg-cardBg border border-gray-200 px-3 py-1 rounded-full text-xs text-gray-600 font-mono shadow-sm">ID: <span id="display-uid">---</span></span>
+                <button onclick="logout()" class="text-gray-500 hover:text-red-500 p-1"><i class="fa-solid fa-power-off"></i></button>
             </div>
         </div>
 
         <section id="tab-home" class="tab-content space-y-6">
-            <div class="bg-cardBg border border-gray-800 rounded-2xl p-5 relative overflow-hidden">
-                <h3 class="text-sm font-semibold text-gray-300 tracking-wide uppercase mb-1">Turn Idle Storage Into Passive Income</h3>
+            <div class="bg-cardBg border border-gray-200 rounded-2xl p-5 relative overflow-hidden shadow-sm">
+                <h3 class="text-sm font-semibold text-gray-700 tracking-wide uppercase mb-1">Turn Idle Storage Into Passive Income</h3>
                 <h2 class="text-xl font-black text-neonGreen mb-4">FEED DATA TO THE AI NETWORK</h2>
-              
             </div>
 
-            <div class="bg-cardBg p-4 rounded-2xl border border-gray-800 space-y-3">
-                <div class="flex items-center gap-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">
+            <div class="bg-cardBg p-4 rounded-2xl border border-gray-200 space-y-3 shadow-sm">
+                <div class="flex items-center gap-2 text-xs font-semibold text-gray-600 uppercase tracking-wider">
                     <span class="w-2 h-2 rounded-full bg-neonGreen animate-pulse"></span>
                     Live Settlement Activities Feed
                 </div>
@@ -142,49 +141,49 @@
 
             <div>
                 <div class="flex justify-between items-center mb-2">
-                    <h3 class="text-xs font-bold uppercase tracking-wider text-gray-500">Personal Milestone</h3>
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-gray-400">Personal Milestone</h3>
                     <div class="text-[10px] text-neonGreen font-mono font-medium border border-neonGreen/20 px-2 py-0.5 rounded-md bg-neonGreen/5">
                         Core Stream Index: <span id="node-stream-index">94.2%</span>
                     </div>
                 </div>
                 <div class="grid grid-cols-2 gap-3">
-                    <div class="bg-cardBg border border-gray-800 rounded-xl p-4">
-                        <div class="flex items-center gap-2 text-gray-400 text-xs mb-2">
+                    <div class="bg-cardBg border border-gray-200 rounded-xl p-4 shadow-sm">
+                        <div class="flex items-center gap-2 text-gray-500 text-xs mb-2">
                             <i class="fa-solid fa-chart-line text-neonGreen"></i> Daily Income
                         </div>
-                        <div class="text-xl font-bold text-white">₦ <span id="home-daily-income">0.00</span></div>
+                        <div class="text-xl font-bold text-gray-900">₦ <span id="home-daily-income">0.00</span></div>
                     </div>
-                    <div class="bg-cardBg border border-gray-800 rounded-xl p-4">
-                        <div class="flex items-center gap-2 text-gray-400 text-xs mb-2">
+                    <div class="bg-cardBg border border-gray-200 rounded-xl p-4 shadow-sm">
+                        <div class="flex items-center gap-2 text-gray-500 text-xs mb-2">
                             <i class="fa-solid fa-wallet text-neonGreen"></i> Commission
                         </div>
-                        <div class="text-xl font-bold text-white">₦ <span id="home-commission">0.00</span></div>
+                        <div class="text-xl font-bold text-gray-900">₦ <span id="home-commission">0.00</span></div>
                     </div>
                 </div>
             </div>
 
             <div class="grid grid-cols-4 gap-2 text-center">
-                <button onclick="openRechargeModal()" class="bg-cardBg border border-gray-800 py-3 rounded-xl flex flex-col items-center gap-1.5 hover:border-gray-700">
+                <button onclick="openRechargeModal()" class="bg-cardBg border border-gray-200 py-3 rounded-xl flex flex-col items-center gap-1.5 hover:border-gray-300 shadow-sm">
                     <i class="fa-solid fa-circle-arrow-up text-neonGreen text-lg"></i>
-                    <span class="text-[11px] text-gray-400 font-medium">Recharge</span>
+                    <span class="text-[11px] text-gray-600 font-medium">Recharge</span>
                 </button>
-                <button onclick="navigateToView('sub-withdraw')" class="bg-cardBg border border-gray-800 py-3 rounded-xl flex flex-col items-center gap-1.5 hover:border-gray-700">
+                <button onclick="navigateToView('sub-withdraw')" class="bg-cardBg border border-gray-200 py-3 rounded-xl flex flex-col items-center gap-1.5 hover:border-gray-300 shadow-sm">
                     <i class="fa-solid fa-circle-arrow-down text-neonGreen text-lg"></i>
-                    <span class="text-[11px] text-gray-400 font-medium">Withdraw</span>
+                    <span class="text-[11px] text-gray-600 font-medium">Withdraw</span>
                 </button>
-                <button onclick="switchTab('portfolio')" class="bg-cardBg border border-gray-800 py-3 rounded-xl flex flex-col items-center gap-1.5 hover:border-gray-700">
+                <button onclick="switchTab('portfolio')" class="bg-cardBg border border-gray-200 py-3 rounded-xl flex flex-col items-center gap-1.5 hover:border-gray-300 shadow-sm">
                     <i class="fa-solid fa-calendar-check text-neonGreen text-lg"></i>
-                    <span class="text-[11px] text-gray-400 font-medium">Check in</span>
+                    <span class="text-[11px] text-gray-600 font-medium">Check in</span>
                 </button>
-                <button onclick="switchTab('team')" class="bg-cardBg border border-gray-800 py-3 rounded-xl flex flex-col items-center gap-1.5 hover:border-gray-700">
+                <button onclick="switchTab('team')" class="bg-cardBg border border-gray-200 py-3 rounded-xl flex flex-col items-center gap-1.5 hover:border-gray-300 shadow-sm">
                     <i class="fa-solid fa-gift text-neonGreen text-lg"></i>
-                    <span class="text-[11px] text-gray-400 font-medium">Reward</span>
+                    <span class="text-[11px] text-gray-600 font-medium">Reward</span>
                 </button>
             </div>
 
             <div>
                 <div class="flex justify-between items-center mb-3">
-                    <h3 class="text-xs font-bold uppercase tracking-wider text-gray-500">My Running Systems</h3>
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-gray-400">My Running Systems</h3>
                     <button onclick="switchTab('product')" class="text-xs text-neonGreen font-semibold flex items-center gap-1"><i class="fa-solid fa-circle-plus"></i> All Purchase</button>
                 </div>
                 <div id="home-devices-list" class="space-y-2"></div>
@@ -192,119 +191,119 @@
         </section>
 
         <section id="tab-product" class="tab-content hidden space-y-4">
-            <div class="border-b border-gray-800 pb-2">
-                <h2 class="text-xl font-bold text-white">AI Compute Rental</h2>
-                <p class="text-xs text-gray-400">Deploy enterprise-grade computing  to earn standardized daily dividends.</p>
+            <div class="border-b border-gray-200 pb-2">
+                <h2 class="text-xl font-bold text-gray-900">AI Compute Rental</h2>
+                <p class="text-xs text-gray-600">Deploy enterprise-grade computing to earn standardized daily dividends.</p>
             </div>
             <div id="products-container" class="space-y-3"></div>
         </section>
 
         <section id="tab-portfolio" class="tab-content hidden space-y-4">
-            <div class="bg-neonGreen text-black p-5 rounded-2xl flex justify-between items-center font-bold shadow-lg shadow-neonGreen/5">
+            <div class="bg-neonGreen text-white p-5 rounded-2xl flex justify-between items-center font-bold shadow-lg shadow-neonGreen/10">
                 <div>
-                    <span class="text-xs uppercase tracking-wider opacity-80">Deployed Compute Cores</span>
+                    <span class="text-xs uppercase tracking-wider opacity-90">Deployed Compute Cores</span>
                     <div class="text-3xl font-black mt-1" id="portfolio-quantity">0</div>
                 </div>
                 <div class="text-right">
-                    <span class="text-xs uppercase tracking-wider opacity-80">Total Interest Generated</span>
+                    <span class="text-xs uppercase tracking-wider opacity-90">Total Interest Generated</span>
                     <div class="text-2xl font-black mt-1">₦ <span id="portfolio-interest">0</span></div>
                 </div>
             </div>
 
-            <div class="bg-cardBg border border-gray-800 rounded-xl p-4">
-                <h3 class="text-sm font-bold text-white mb-3 flex items-center gap-2">
-                    <i class="fa-solid fa-bolt text-neonGreen"></i> Daily Micro-Tasks
+            <div class="bg-cardBg border border-gray-200 rounded-xl p-4 shadow-sm">
+                <h3 class="text-sm font-bold text-gray-900 mb-3 flex items-center gap-2">
+                    <i class="fa-solid fa-bold text-neonGreen"></i> Daily Micro-Tasks
                 </h3>
                 <div id="tasks-container" class="space-y-2"></div>
             </div>
         </section>
 
         <section id="tab-team" class="tab-content hidden space-y-4">
-            <div class="bg-neonGreen text-black p-5 rounded-2xl grid grid-cols-3 gap-2 text-center font-bold">
+            <div class="bg-neonGreen text-white p-5 rounded-2xl grid grid-cols-3 gap-2 text-center font-bold shadow-sm">
                 <div>
-                    <div class="text-xs opacity-75">Total People</div>
+                    <div class="text-xs opacity-90">Total People</div>
                     <div class="text-xl font-black mt-1" id="team-count">0</div>
                 </div>
                 <div>
-                    <div class="text-xs opacity-75">Investments</div>
+                    <div class="text-xs opacity-90">Investments</div>
                     <div class="text-xl font-black mt-1">₦<span id="team-investments">0</span></div>
                 </div>
                 <div>
-                    <div class="text-xs opacity-75">Commissions</div>
+                    <div class="text-xs opacity-90">Commissions</div>
                     <div class="text-xl font-black mt-1">₦<span id="team-commissions">0</span></div>
                 </div>
             </div>
 
-            <div class="bg-cardBg border border-gray-800 p-4 rounded-xl space-y-3">
+            <div class="bg-cardBg border border-gray-200 p-4 rounded-xl space-y-3 shadow-sm">
                 <div class="flex items-start gap-3">
                     <div class="bg-neonGreen/10 p-2.5 rounded-xl border border-neonGreen/20 text-neonGreen">
                         <i class="fa-solid fa-share-nodes text-xl"></i>
                     </div>
                     <div>
-                        <h4 class="text-sm font-bold text-white">Invite Friends & Earn Big</h4>
-                        <p class="text-xs text-gray-400 mt-0.5">Level 1: 25% Commission • Level 2: 2% Commission</p>
+                        <h4 class="text-sm font-bold text-gray-900">Invite Friends & Earn Big</h4>
+                        <p class="text-xs text-gray-600 mt-0.5">Level 1: 25% Commission • Level 2: 2% Commission</p>
                     </div>
                 </div>
-                <div class="bg-darkBg border border-gray-800 p-3 rounded-xl flex items-center justify-between gap-2">
-                    <span id="invite-link-text" class="text-xs text-gray-400 font-mono overflow-hidden text-ellipsis whitespace-nowrap">Link Loading...</span>
-                    <button onclick="copyInviteLink()" class="bg-neonGreen/20 hover:bg-neonGreen/30 text-neonGreen px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1 shrink-0">
+                <div class="bg-darkBg border border-gray-200 p-3 rounded-xl flex items-center justify-between gap-2">
+                    <span id="invite-link-text" class="text-xs text-gray-600 font-mono overflow-hidden text-ellipsis whitespace-nowrap">Link Loading...</span>
+                    <button onclick="copyInviteLink()" class="bg-neonGreen/10 hover:bg-neonGreen/20 text-neonGreen px-3 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1 shrink-0">
                         <i class="fa-regular fa-copy"></i> Copy
                     </button>
                 </div>
             </div>
 
-            <div class="border-t border-gray-800 pt-3">
-                <h3 class="text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">Success Roadmap</h3>
-                <div class="bg-cardBg border border-gray-800 p-4 rounded-xl flex justify-between items-center">
+            <div class="border-t border-gray-200 pt-3">
+                <h3 class="text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">Success Roadmap</h3>
+                <div class="bg-cardBg border border-gray-200 p-4 rounded-xl flex justify-between items-center shadow-sm">
                     <div>
-                        <div class="text-sm font-bold text-white">Team Tier Level 1</div>
+                        <div class="text-sm font-bold text-gray-900">Team Tier Level 1</div>
                         <div class="text-xs text-neonGreen font-medium mt-0.5">Active Rate 25.00%</div>
                     </div>
-                    <div class="text-right text-xs text-gray-400">
-                        <div>Size: <span class="text-white font-bold" id="roadmap-count">0</span></div>
+                    <div class="text-right text-xs text-gray-500">
+                        <div>Size: <span class="text-gray-900 font-bold" id="roadmap-count">0</span></div>
                     </div>
                 </div>
             </div>
         </section>
 
         <section id="tab-user" class="tab-content hidden space-y-6">
-            <div class="flex items-center gap-4 bg-cardBg border border-gray-800 p-4 rounded-xl">
-                <div class="w-12 h-12 bg-neonGreen rounded-xl flex items-center justify-center text-black font-black text-xl">
+            <div class="flex items-center gap-4 bg-cardBg border border-gray-200 p-4 rounded-xl shadow-sm">
+                <div class="w-12 h-12 bg-neonGreen rounded-xl flex items-center justify-center text-white font-black text-xl">
                     <i class="fa-solid fa-user-gear"></i>
                 </div>
                 <div>
-                    <div class="text-xs text-gray-400 font-medium uppercase tracking-wider">Account Operator</div>
-                    <div class="text-lg font-bold text-white font-mono" id="user-phone-display">080********</div>
+                    <div class="text-xs text-gray-500 font-medium uppercase tracking-wider">Account Operator</div>
+                    <div class="text-lg font-bold text-gray-900 font-mono" id="user-phone-display">080********</div>
                 </div>
             </div>
 
-            <div class="bg-cardBg border border-gray-800 p-4 rounded-xl space-y-2">
-                <div class="text-xs font-bold uppercase tracking-wider text-gray-500">Linked Distribution Bank Account</div>
+            <div class="bg-cardBg border border-gray-200 p-4 rounded-xl space-y-2 shadow-sm">
+                <div class="text-xs font-bold uppercase tracking-wider text-gray-400">Linked Distribution Bank Account</div>
                 <div id="bound-bank-display-area" class="text-xs space-y-1"></div>
             </div>
 
-            <div class="bg-neonGreen text-black p-5 rounded-2xl flex justify-between items-center font-bold">
+            <div class="bg-neonGreen text-white p-5 rounded-2xl flex justify-between items-center font-bold shadow-md">
                 <div>
-                    <span class="text-xs uppercase tracking-wider opacity-80">Balance</span>
+                    <span class="text-xs uppercase tracking-wider opacity-90">Balance</span>
                     <div class="text-3xl font-black mt-1">₦ <span id="user-balance">0.00</span></div>
                 </div>
                 <div class="text-right">
-                    <span class="text-xs uppercase tracking-wider opacity-80">Daily income</span>
+                    <span class="text-xs uppercase tracking-wider opacity-90">Daily income</span>
                     <div class="text-2xl font-black mt-1">₦ <span id="user-earnings">0.00</span></div>
                 </div>
             </div>
 
             <div class="grid grid-cols-4 gap-2 text-center">
-                <button onclick="openRechargeModal()" class="bg-cardBg border border-gray-800 py-4 rounded-xl text-xs flex flex-col items-center gap-2 text-gray-300 font-medium">
+                <button onclick="openRechargeModal()" class="bg-cardBg border border-gray-200 py-4 rounded-xl text-xs flex flex-col items-center gap-2 text-gray-700 font-medium shadow-sm hover:border-gray-300">
                     <i class="fa-solid fa-circle-arrow-up text-neonGreen text-xl"></i> Recharge
                 </button>
-                <button onclick="navigateToView('sub-withdraw')" class="bg-cardBg border border-gray-800 py-4 rounded-xl text-xs flex flex-col items-center gap-2 text-gray-300 font-medium">
+                <button onclick="navigateToView('sub-withdraw')" class="bg-cardBg border border-gray-200 py-4 rounded-xl text-xs flex flex-col items-center gap-2 text-gray-700 font-medium shadow-sm hover:border-gray-300">
                     <i class="fa-solid fa-circle-arrow-down text-neonGreen text-xl"></i> Withdraw
                 </button>
-                <button onclick="navigateToView('sub-bank')" class="bg-cardBg border border-gray-800 py-4 rounded-xl text-xs flex flex-col items-center gap-2 text-gray-300 font-medium">
+                <button onclick="navigateToView('sub-bank')" class="bg-cardBg border border-gray-200 py-4 rounded-xl text-xs flex flex-col items-center gap-2 text-gray-700 font-medium shadow-sm hover:border-gray-300">
                     <i class="fa-solid fa-credit-card text-neonGreen text-xl"></i> Bank Card
                 </button>
-                <button onclick="navigateToView('sub-bill')" class="bg-cardBg border border-gray-800 py-4 rounded-xl text-xs flex flex-col items-center gap-2 text-gray-300 font-medium">
+                <button onclick="navigateToView('sub-bill')" class="bg-cardBg border border-gray-200 py-4 rounded-xl text-xs flex flex-col items-center gap-2 text-gray-700 font-medium shadow-sm hover:border-gray-300">
                     <i class="fa-solid fa-file-invoice-dollar text-neonGreen text-xl"></i> Bill
                 </button>
             </div>
@@ -312,60 +311,60 @@
 
         <section id="sub-withdraw" class="tab-content hidden space-y-6">
             <div class="flex items-center justify-between pb-3">
-                <button onclick="exitSubView()" class="text-xl text-white font-bold flex items-center gap-2">
+                <button onclick="exitSubView()" class="text-xl text-gray-900 font-bold flex items-center gap-2">
                     <i class="fa-solid fa-chevron-left text-sm"></i> WITHDRAW
                 </button>
                 <button type="button" onclick="navigateToView('sub-bill')" class="text-sm text-neonGreen font-semibold">Bill</button>
             </div>
 
-            <div class="bg-cardBg border border-gray-800 rounded-2xl p-5 flex justify-between items-center">
+            <div class="bg-cardBg border border-gray-200 rounded-2xl p-5 flex justify-between items-center shadow-sm">
                 <div class="space-y-1">
-                    <span class="text-xs text-gray-400 font-medium">Current balance</span>
+                    <span class="text-xs text-gray-500 font-medium">Current balance</span>
                     <div class="text-3xl font-black text-neonGreen">₦ <span id="withdraw-card-balance">0</span></div>
                 </div>
                 <div class="w-16 h-16 relative flex items-center justify-center">
                     <i class="fa-solid fa-wallet text-neonGreen text-4xl opacity-80"></i>
-                    <i class="fa-solid fa-circle-arrow-down text-darkBg absolute text-sm bottom-3 right-3 bg-neonGreen rounded-full p-0.5"></i>
+                    <i class="fa-solid fa-circle-arrow-down text-white absolute text-sm bottom-3 right-3 bg-neonGreen rounded-full p-0.5"></i>
                 </div>
             </div>
 
             <form onsubmit="executeWithdrawalFlow(event)" class="space-y-5">
                 <div class="space-y-1">
-                    <div class="flex items-center gap-2 text-xs font-semibold text-gray-300 pb-1 border-b border-gray-800">
+                    <div class="flex items-center gap-2 text-xs font-semibold text-gray-700 pb-1 border-b border-gray-200">
                         <i class="fa-solid fa-wallet text-neonGreen"></i> Bank Account
                     </div>
                     <div class="flex items-center justify-between bg-inputBg rounded-xl p-3 mt-1.5">
-                        <input type="text" id="withdraw-account-field" readonly placeholder="Please enter the account" class="bg-transparent text-sm text-white w-2/3 focus:outline-none">
-                        <button type="button" onclick="navigateToView('sub-bank')" class="text-xs text-gray-300 hover:text-white font-medium">Switch</button>
+                        <input type="text" id="withdraw-account-field" readonly placeholder="Please enter the account" class="bg-transparent text-sm text-gray-900 w-2/3 focus:outline-none">
+                        <button type="button" onclick="navigateToView('sub-bank')" class="text-xs text-gray-600 hover:text-gray-900 font-medium">Switch</button>
                     </div>
                 </div>
 
                 <div class="space-y-1">
-                    <div class="flex items-center gap-2 text-xs font-semibold text-gray-300 pb-1 border-b border-gray-800">
+                    <div class="flex items-center gap-2 text-xs font-semibold text-gray-700 pb-1 border-b border-gray-200">
                         <i class="fa-solid fa-border-all text-neonGreen"></i> Withdraw Amount
                     </div>
                     <div class="bg-inputBg rounded-xl p-3 mt-1.5 flex items-center gap-2">
-                        <span class="text-sm font-bold text-gray-400">₦</span>
-                        <input type="number" id="withdraw-amount-field" required placeholder="Please enter the amount" class="bg-transparent text-sm text-white w-full focus:outline-none transition-colors">
+                        <span class="text-sm font-bold text-gray-500">₦</span>
+                        <input type="number" id="withdraw-amount-field" required placeholder="Please enter the amount" class="bg-transparent text-sm text-gray-900 w-full focus:outline-none transition-colors">
                     </div>
                 </div>
 
                 <div class="space-y-1">
-                    <div class="flex items-center gap-2 text-xs font-semibold text-gray-300 pb-1 border-b border-gray-800">
+                    <div class="flex items-center gap-2 text-xs font-semibold text-gray-700 pb-1 border-b border-gray-200">
                         <i class="fa-solid fa-lock text-neonGreen"></i> Withdraw PIN
                     </div>
                     <div class="bg-inputBg rounded-xl p-3 mt-1.5 flex items-center justify-between">
-                        <input type="password" id="withdraw-password-field" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" required placeholder="Enter 4-digit withdrawal PIN" class="bg-transparent text-sm text-white w-full focus:outline-none font-mono tracking-widest transition-colors">
+                        <input type="password" id="withdraw-password-field" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" required placeholder="Enter 4-digit withdrawal PIN" class="bg-transparent text-sm text-gray-900 w-full focus:outline-none font-mono tracking-widest transition-colors">
                     </div>
                 </div>
 
-                <button type="submit" id="withdraw-submit-btn" class="w-full bg-neonGreen text-black font-extrabold py-3.5 rounded-xl hover:bg-neonGreenHover transition-colors text-sm uppercase tracking-wide mt-4">
+                <button type="submit" id="withdraw-submit-btn" class="w-full bg-neonGreen text-white font-extrabold py-3.5 rounded-xl hover:bg-neonGreenHover transition-colors text-sm uppercase tracking-wide mt-4 shadow-sm">
                     Withdraw
                 </button>
             </form>
 
             <div class="space-y-2 text-xs text-gray-500 pt-2 font-medium">
-                <div class="font-bold text-gray-400 text-sm">Withdrawal Notice</div>
+                <div class="font-bold text-gray-700 text-sm">Withdrawal Notice</div>
                 <p>1: Minimum withdrawal amount: ₦1500</p>
                 <p>2: Withdrawal time: Monday to Sunday, 10:00 - 17:00</p>
             </div>
@@ -373,24 +372,24 @@
 
         <section id="sub-bank" class="tab-content hidden space-y-6">
             <div class="pb-2">
-                <button onclick="exitSubView()" class="text-xl text-white font-bold flex items-center gap-2">
+                <button onclick="exitSubView()" class="text-xl text-gray-900 font-bold flex items-center gap-2">
                     <i class="fa-solid fa-chevron-left text-sm"></i> BANK
                 </button>
             </div>
 
             <form onsubmit="saveBankCardDetails(event)" class="space-y-5">
                 <div class="space-y-1">
-                    <div class="flex items-center gap-2 text-xs font-semibold text-gray-300 pb-1 border-b border-gray-800">
+                    <div class="flex items-center gap-2 text-xs font-semibold text-gray-700 pb-1 border-b border-gray-200">
                         <i class="fa-solid fa-user text-neonGreen"></i> Enter name
                     </div>
-                    <input type="text" id="bank-cardholder-name" required placeholder="Please input cardholder name" class="w-full bg-inputBg rounded-xl p-3.5 text-sm text-white mt-1.5 focus:outline-none transition-colors">
+                    <input type="text" id="bank-cardholder-name" required placeholder="Please input cardholder name" class="w-full bg-inputBg rounded-xl p-3.5 text-sm text-gray-900 mt-1.5 focus:outline-none transition-colors">
                 </div>
 
                 <div class="space-y-1">
-                    <div class="flex items-center gap-2 text-xs font-semibold text-gray-300 pb-1 border-b border-gray-800">
+                    <div class="flex items-center gap-2 text-xs font-semibold text-gray-700 pb-1 border-b border-gray-200">
                         <i class="fa-solid fa-wallet text-neonGreen"></i> Please select bank type
                     </div>
-                    <select id="bank-type-select" class="w-full bg-inputBg rounded-xl p-3.5 text-sm text-white mt-1.5 focus:outline-none transition-colors">
+                    <select id="bank-type-select" class="w-full bg-inputBg rounded-xl p-3.5 text-sm text-gray-900 mt-1.5 focus:outline-none transition-colors">
                         <option value="" disabled selected>Please select bank type</option>
                         <option value="Access Bank">Access Bank</option>
                         <option value="Guaranty Trust Bank (GTB)">Guaranty Trust Bank (GTB)</option>
@@ -403,13 +402,13 @@
                 </div>
 
                 <div class="space-y-1">
-                    <div class="flex items-center gap-2 text-xs font-semibold text-gray-300 pb-1 border-b border-gray-800">
+                    <div class="flex items-center gap-2 text-xs font-semibold text-gray-700 pb-1 border-b border-gray-200">
                         <i class="fa-solid fa-wallet text-neonGreen"></i> Bank Account
                     </div>
-                    <input type="number" id="bank-account-number" required placeholder="Please input the account number" class="w-full bg-inputBg rounded-xl p-3.5 text-sm text-white mt-1.5 focus:outline-none transition-colors">
+                    <input type="number" id="bank-account-number" required placeholder="Please input the account number" class="w-full bg-inputBg rounded-xl p-3.5 text-sm text-gray-900 mt-1.5 focus:outline-none transition-colors">
                 </div>
 
-                <button type="submit" class="w-full bg-neonGreen text-black font-extrabold py-3.5 rounded-xl hover:bg-neonGreenHover transition-colors text-sm uppercase tracking-wide mt-4">
+                <button type="submit" class="w-full bg-neonGreen text-white font-extrabold py-3.5 rounded-xl hover:bg-neonGreenHover transition-colors text-sm uppercase tracking-wide mt-4 shadow-sm">
                     Change
                 </button>
             </form>
@@ -417,22 +416,22 @@
 
         <section id="sub-bill" class="tab-content hidden space-y-4">
             <div class="pb-2">
-                <button onclick="exitSubView()" class="text-xl text-white font-bold flex items-center gap-2">
+                <button onclick="exitSubView()" class="text-xl text-gray-900 font-bold flex items-center gap-2">
                     <i class="fa-solid fa-chevron-left text-sm"></i> BILL
                 </button>
             </div>
 
-            <div class="flex border-b border-gray-900 text-sm font-medium text-center">
+            <div class="flex border-b border-gray-200 text-sm font-medium text-center">
                 <button type="button" onclick="filterBillLog('recharge')" id="bill-tab-recharge" class="w-1/3 pb-3 border-b-2 border-neonGreen text-neonGreen transition-all">Recharge</button>
-                <button type="button" onclick="filterBillLog('withdraw')" id="bill-tab-withdraw" class="w-1/3 pb-3 border-b-2 border-transparent text-gray-400 transition-all">Withdraw</button>
-                <button type="button" onclick="filterBillLog('all')" id="bill-tab-all" class="w-1/3 pb-3 border-b-2 border-transparent text-gray-400 transition-all">All</button>
+                <button type="button" onclick="filterBillLog('withdraw')" id="bill-tab-withdraw" class="w-1/3 pb-3 border-b-2 border-transparent text-gray-500 transition-all">Withdraw</button>
+                <button type="button" onclick="filterBillLog('all')" id="bill-tab-all" class="w-1/3 pb-3 border-b-2 border-transparent text-gray-500 transition-all">All</button>
             </div>
 
             <div id="bill-empty-state" class="py-16 text-center space-y-3 hidden">
                 <div class="w-24 h-24 mx-auto relative opacity-40">
-                    <i class="fa-solid fa-moon text-6xl text-gray-600"></i>
+                    <i class="fa-solid fa-moon text-6xl text-gray-400"></i>
                 </div>
-                <div class="text-gray-500 text-sm font-medium">No data found</div>
+                <div class="text-gray-400 text-sm font-medium">No data found</div>
             </div>
 
             <div id="bill-list-container" class="space-y-2"></div>
@@ -440,112 +439,111 @@
 
     </div>
 
-    <div id="recharge-modal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-cardBg border border-gray-800 w-full max-w-sm rounded-2xl p-5 space-y-4 max-h-[90vh] overflow-y-auto hide-scrollbar">
-            <div class="flex justify-between items-center border-b border-gray-800 pb-2">
-                <h3 class="font-bold text-white flex items-center gap-2"><i class="fa-solid fa-building-columns text-neonGreen"></i> Local Bank Deposit</h3>
-                <button onclick="closeRechargeModal()" class="text-gray-400 hover:text-white p-1"><i class="fa-solid fa-xmark"></i></button>
+    <div id="recharge-modal" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-cardBg border border-gray-200 w-full max-w-sm rounded-2xl p-5 space-y-4 max-h-[90vh] overflow-y-auto hide-scrollbar shadow-2xl">
+            <div class="flex justify-between items-center border-b border-gray-200 pb-2">
+                <h3 class="font-bold text-gray-900 flex items-center gap-2"><i class="fa-solid fa-building-columns text-neonGreen"></i> Local Bank Deposit</h3>
+                <button onclick="closeRechargeModal()" class="text-gray-500 hover:text-gray-900 p-1"><i class="fa-solid fa-xmark"></i></button>
             </div>
             
             <div id="recharge-step-1" class="space-y-4">
-                <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Select Payment Provider Pathway</label>
+                <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-1">Select Payment Provider Pathway</label>
                 <div class="grid grid-cols-2 gap-2">
-                    <button type="button" onclick="selectDepositMethod('opay')" id="btn-method-opay" class="p-3 rounded-xl bg-zinc-900 border border-gray-800 text-xs font-bold text-gray-300 hover:border-neonGreen transition-all text-center">
-                        <i class="fa-solid fa-wallet mb-1 block text-sm text-blue-400"></i> OPay Pathway1
+                    <button type="button" onclick="selectDepositMethod('opay')" id="btn-method-opay" class="p-3 rounded-xl bg-gray-50 border border-gray-200 text-xs font-bold text-gray-700 hover:border-neonGreen transition-all text-center">
+                        <i class="fa-solid fa-wallet mb-1 block text-sm text-blue-500"></i> OPay Pathway1
                     </button>
-                    <button type="button" onclick="selectDepositMethod('palmpay')" id="btn-method-palmpay" class="p-3 rounded-xl bg-zinc-900 border border-gray-800 text-xs font-bold text-gray-300 hover:border-neonGreen transition-all text-center">
-                        <i class="fa-solid fa-building-columns mb-1 block text-sm text-purple-400"></i> OPay Pathway2
+                    <button type="button" onclick="selectDepositMethod('palmpay')" id="btn-method-palmpay" class="p-3 rounded-xl bg-gray-50 border border-gray-200 text-xs font-bold text-gray-700 hover:border-neonGreen transition-all text-center">
+                        <i class="fa-solid fa-building-columns mb-1 block text-sm text-purple-500"></i> OPay Pathway2
                     </button>
                 </div>
 
-                <div id="deposit-account-card" class="bg-darkBg p-3.5 rounded-xl border border-gray-800 space-y-2 text-sm font-mono hidden">
-                    <div class="flex justify-between"><span class="text-gray-500">Bank:</span> <span id="disp-bank" class="text-white font-bold"></span></div>
+                <div id="deposit-account-card" class="bg-darkBg p-3.5 rounded-xl border border-gray-200 space-y-2 text-sm font-mono hidden">
+                    <div class="flex justify-between"><span class="text-gray-500">Bank:</span> <span id="disp-bank" class="text-gray-900 font-bold"></span></div>
                     <div class="flex justify-between"><span class="text-gray-500">Account No:</span> <span id="disp-num" class="text-neonGreen font-bold tracking-wider"></span></div>
-                    <div class="flex justify-between"><span class="text-gray-500">Account Name:</span> <span id="disp-name" class="text-white"></span></div>
+                    <div class="flex justify-between"><span class="text-gray-500">Account Name:</span> <span id="disp-name" class="text-gray-900"></span></div>
                 </div>
 
                 <div id="deposit-form-inputs" class="space-y-4 hidden">
                     <div class="space-y-2">
-                        <label class="block text-xs text-gray-400 font-bold uppercase">Amount to Recharge (₦)</label>
-                        <input type="number" id="deposit-amount" placeholder="Minimum 3000" class="w-full bg-darkBg border border-gray-800 p-3 rounded-xl text-white text-sm font-bold focus:outline-none focus:border-neonGreen transition-colors">
+                        <label class="block text-xs text-gray-600 font-bold uppercase">Amount to Recharge (₦)</label>
+                        <input type="number" id="deposit-amount" placeholder="Minimum 3000" class="w-full bg-darkBg border border-gray-200 p-3 rounded-xl text-gray-900 text-sm font-bold focus:outline-none focus:border-neonGreen transition-colors">
                     </div>
-                    <button onclick="goToReceiptUploadStep()" class="w-full bg-neonGreen text-black font-bold py-3 rounded-xl hover:bg-neonGreenHover transition-colors text-sm">Submit Deposit Confirmation</button>
+                    <button onclick="goToReceiptUploadStep()" class="w-full bg-neonGreen text-white font-bold py-3 rounded-xl hover:bg-neonGreenHover transition-colors text-sm shadow-sm">Submit Deposit Confirmation</button>
                 </div>
             </div>
 
             <div id="recharge-step-2" class="space-y-4 hidden">
-                <div class="text-center p-3 bg-darkBg border border-gray-800 rounded-xl">
-                    <div class="text-xs text-gray-400">Confirming Reservation Amount:</div>
+                <div class="text-center p-3 bg-darkBg border border-gray-200 rounded-xl">
+                    <div class="text-xs text-gray-500">Confirming Reservation Amount:</div>
                     <div class="text-xl font-bold text-neonGreen mt-1">₦ <span id="deposit-confirm-val">0</span></div>
                 </div>
                 
                 <div class="space-y-2">
-                    <label class="block text-xs text-gray-400 font-bold uppercase tracking-wide">Upload Payment Receipt / Screenshot</label>
-                    <div class="relative border-2 border-dashed border-gray-800 hover:border-neonGreen/40 rounded-xl p-6 text-center cursor-pointer transition-colors" id="drop-zone" onclick="document.getElementById('receipt-file-input').click()">
+                    <label class="block text-xs text-gray-600 font-bold uppercase tracking-wide">Upload Payment Receipt / Screenshot</label>
+                    <div class="relative border-2 border-dashed border-gray-300 hover:border-neonGreen/40 rounded-xl p-6 text-center cursor-pointer transition-colors" id="drop-zone" onclick="document.getElementById('receipt-file-input').click()">
                         <input type="file" id="receipt-file-input" accept="image/*" class="hidden" onchange="handleReceiptFileSelection(this)">
                         <div id="upload-prompt-view" class="space-y-2">
-                            <i class="fa-solid fa-cloud-arrow-up text-gray-500 text-2xl"></i>
-                            <p class="text-xs text-gray-400 font-medium">Select or drag transfer screenshot here</p>
+                            <i class="fa-solid fa-cloud-arrow-up text-gray-400 text-2xl"></i>
+                            <p class="text-xs text-gray-500 font-medium">Select or drag transfer screenshot here</p>
                         </div>
                         <div id="upload-success-view" class="hidden space-y-2">
                             <i class="fa-solid fa-circle-check text-neonGreen text-2xl"></i>
-                            <p id="receipt-filename-label" class="text-xs text-white font-mono font-medium truncate max-w-[200px] mx-auto">receipt.jpg</p>
+                            <p id="receipt-filename-label" class="text-xs text-gray-900 font-mono font-medium truncate max-w-[200px] mx-auto">receipt.jpg</p>
                         </div>
                     </div>
                 </div>
 
-                <button id="final-verify-deposit-btn" onclick="executeRechargeVerification()" class="w-full bg-neonGreen text-black font-bold py-3 rounded-xl hover:bg-neonGreenHover transition-colors text-sm flex items-center justify-center gap-2">
+                <button id="final-verify-deposit-btn" onclick="executeRechargeVerification()" class="w-full bg-neonGreen text-white font-bold py-3 rounded-xl hover:bg-neonGreenHover transition-colors text-sm flex items-center justify-center gap-2 shadow-sm">
                     Submit Receipt to Admin
                 </button>
             </div>
         </div>
     </div>
 
-    <div id="premium-ad-overlay" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[200] hidden flex flex-col items-center justify-center p-4 text-center">
-        <div class="bg-cardBg border border-gray-800 w-full max-w-sm rounded-2xl p-5 space-y-4 shadow-2xl relative">
+    <div id="premium-ad-overlay" class="fixed inset-0 bg-white/90 backdrop-blur-md z-[200] hidden flex flex-col items-center justify-center p-4 text-center">
+        <div class="bg-cardBg border border-gray-200 w-full max-w-sm rounded-2xl p-5 space-y-4 shadow-2xl relative">
             
-            <div class="flex justify-between items-center border-b border-gray-900 pb-2">
+            <div class="flex justify-between items-center border-b border-gray-100 pb-2">
                 <span class="text-[10px] font-mono text-neonGreen tracking-widest uppercase animate-pulse">● Live Network Stream</span>
                 <div class="w-2 h-2 rounded-full bg-neonGreen"></div>
             </div>
 
-            <div id="ad-frame-holder" class="w-full min-h-[250px] bg-darkBg rounded-xl border border-gray-900 flex items-center justify-center overflow-hidden p-2">
+            <div id="ad-frame-holder" class="w-full min-h-[250px] bg-darkBg rounded-xl border border-gray-200 flex items-center justify-center overflow-hidden p-2">
                 </div>
             
-            <div id="ad-timer-badge" class="text-xl font-mono font-black text-neonGreen bg-darkBg py-2.5 rounded-xl border border-gray-900 tracking-wider">
+            <div id="ad-timer-badge" class="text-xl font-mono font-black text-neonGreen bg-darkBg py-2.5 rounded-xl border border-gray-200 tracking-wider">
                 15s Remaining
             </div>
 
             <div id="ad-claim-action-placeholder" class="hidden">
-                <button onclick="triggerFinalAdSettleBonus()" class="w-full bg-neonGreen text-black text-sm font-black py-3.5 rounded-xl hover:bg-neonGreenHover transition-all shadow-lg shadow-neonGreen/20 uppercase tracking-wide">
+                <button onclick="triggerFinalAdSettleBonus()" class="w-full bg-neonGreen text-white text-sm font-black py-3.5 rounded-xl hover:bg-neonGreenHover transition-all shadow-lg shadow-neonGreen/20 uppercase tracking-wide">
                     Claim Reward Balance
                 </button>
             </div>
         </div>
     </div>
 
-    <nav id="footer-navigation-bar" class="fixed bottom-0 left-0 right-0 bg-black/95 border-t border-gray-900 z-40 backdrop-blur-md">
+    <nav id="footer-navigation-bar" class="fixed bottom-0 left-0 right-0 bg-white/95 border-t border-gray-200 z-40 backdrop-blur-md shadow-lg">
         <div class="max-w-md mx-auto grid grid-cols-5 h-20 items-center justify-center text-center">
             <button onclick="switchTab('home')" id="nav-home" class="nav-btn flex flex-col items-center gap-1 font-medium transition-colors text-neonGreen">
                 <i class="fa-solid fa-house-chimney text-lg"></i><span class="text-[11px]">Home</span>
             </button>
-            <button onclick="switchTab('product')" id="nav-product" class="nav-btn flex flex-col items-center gap-1 font-medium transition-colors text-gray-500">
+            <button onclick="switchTab('product')" id="nav-product" class="nav-btn flex flex-col items-center gap-1 font-medium transition-colors text-gray-400">
                 <i class="fa-solid fa-microchip text-lg"></i><span class="text-[11px]">Products</span>
             </button>
-            <button onclick="switchTab('portfolio')" id="nav-portfolio" class="nav-btn flex flex-col items-center gap-1 font-medium transition-colors text-gray-500">
+            <button onclick="switchTab('portfolio')" id="nav-portfolio" class="nav-btn flex flex-col items-center gap-1 font-medium transition-colors text-gray-400">
                 <i class="fa-solid fa-wallet text-lg"></i><span class="text-[11px]">Portfolio</span>
             </button>
-            <button onclick="switchTab('team')" id="nav-team" class="nav-btn flex flex-col items-center gap-1 font-medium transition-colors text-gray-500">
+            <button onclick="switchTab('team')" id="nav-team" class="nav-btn flex flex-col items-center gap-1 font-medium transition-colors text-gray-400">
                 <i class="fa-solid fa-users text-lg"></i><span class="text-[11px]">Team</span>
             </button>
-            <button onclick="switchTab('user')" id="nav-user" class="nav-btn flex flex-col items-center gap-1 font-medium transition-colors text-gray-500">
+            <button onclick="switchTab('user')" id="nav-user" class="nav-btn flex flex-col items-center gap-1 font-medium transition-colors text-gray-400">
                 <i class="fa-solid fa-user text-lg"></i><span class="text-[11px]">User</span>
             </button>
         </div>
     </nav>
 
     <script>
-        // Updated CORE_PRODUCTS Array reflecting matching 3k, 6k, and 10k items
         const CORE_PRODUCTS = [
             { id: 'v1', name: 'AI Compute Rental V1', price: 3000, daily: 600, duration: 30 },
             { id: 'v2', name: 'AI Compute Rental V2', price: 6000, daily: 1200, duration: 30 },
@@ -587,12 +585,12 @@
             if (isSuccess) {
                 toast.classList.remove('border-red-500/30');
                 toast.classList.add('border-neonGreen/30');
-                iconBg.className = "w-8 h-8 rounded-lg flex items-center justify-center shrink-0 bg-neonGreen/10 text-neonGreen";
+                iconBg.className = "w-8 h-8 rounded-lg flex items-center justify-center shrink-0 bg-green-100 text-green-600";
                 icon.className = "fa-solid fa-circle-check";
             } else {
                 toast.classList.remove('border-neonGreen/30');
                 toast.classList.add('border-red-500/30');
-                iconBg.className = "w-8 h-8 rounded-lg flex items-center justify-center shrink-0 bg-red-500/10 text-red-400";
+                iconBg.className = "w-8 h-8 rounded-lg flex items-center justify-center shrink-0 bg-red-100 text-red-600";
                 icon.className = "fa-solid fa-circle-exclamation";
             }
 
@@ -609,24 +607,21 @@
             const el = document.getElementById(elementId);
             if (el) {
                 el.classList.add('border-red-500', 'focus:border-red-500');
-                el.classList.remove('border-gray-800', 'focus:border-neonGreen');
+                el.classList.remove('border-gray-200', 'focus:border-neonGreen');
                 setTimeout(() => {
                     el.classList.remove('border-red-500', 'focus:border-red-500');
-                    el.classList.add('border-gray-800', 'focus:border-neonGreen');
+                    el.classList.add('border-gray-200', 'focus:border-neonGreen');
                 }, 3000);
             }
         }
 
-        // All tasks updated to have exactly 300 each
         function initTaskStore() {
-            if (!localStorage.getItem('BH_TASKS')) {
-                const defaultTasks = [
-                    { id: 1, title: 'Stream Sponsor Data  Pipeline', reward: 200 },
-                    { id: 2, title: 'Verify Data-Center Security Audit', reward: 200 },
-                    { id: 3, title: 'Cache Third-Party AI Edge Stream', reward: 200}
-                ];
-                localStorage.setItem('BH_TASKS', JSON.stringify(defaultTasks));
-            }
+            const defaultTasks = [
+                { id: 1, title: 'Stream Sponsor Data Pipeline', reward: 200 },
+                { id: 2, title: 'Verify Data-Center Security Audit', reward: 200 },
+                { id: 3, title: 'Cache Third-Party AI Edge Stream', reward: 200 }
+            ];
+            localStorage.setItem('BH_TASKS', JSON.stringify(defaultTasks));
         }
 
         function checkUrlForReferral() {
@@ -649,13 +644,13 @@
             const registerForm = document.getElementById('register-form');
 
             if (mode === 'login') {
-                loginBtn.className = "w-1/2 py-2.5 text-sm font-medium rounded-lg bg-neonGreen text-black transition-all";
-                regBtn.className = "w-1/2 py-2.5 text-sm font-medium rounded-lg text-gray-400 transition-all";
+                loginBtn.className = "w-1/2 py-2.5 text-sm font-medium rounded-lg bg-neonGreen text-white transition-all";
+                regBtn.className = "w-1/2 py-2.5 text-sm font-medium rounded-lg text-gray-500 transition-all";
                 loginForm.classList.remove('hidden');
                 registerForm.classList.add('hidden');
             } else {
-                regBtn.className = "w-1/2 py-2.5 text-sm font-medium rounded-lg bg-neonGreen text-black transition-all";
-                loginBtn.className = "w-1/2 py-2.5 text-sm font-medium rounded-lg text-gray-400 transition-all";
+                regBtn.className = "w-1/2 py-2.5 text-sm font-medium rounded-lg bg-neonGreen text-white transition-all";
+                loginBtn.className = "w-1/2 py-2.5 text-sm font-medium rounded-lg text-gray-500 transition-all";
                 loginForm.classList.add('hidden');
                 registerForm.classList.remove('hidden');
             }
@@ -771,7 +766,6 @@
             showNotification('Session Terminated', 'Secure key destroyed.', true);
         }
 
-        // Custom Live Scrolling Mock Feed Engine
         function initLiveDepositTicker() {
             const ticker = document.getElementById('live-deposit-ticker');
             if (!ticker) return;
@@ -802,9 +796,9 @@
             const amount = Math.floor(3 + Math.random() * 47) * 1000;
             
             const div = document.createElement('div');
-            div.className = "flex justify-between items-center bg-zinc-900/60 p-2 rounded-xl border border-gray-800 text-xs h-[26px]";
+            div.className = "flex justify-between items-center bg-gray-50 p-2 rounded-xl border border-gray-200 text-xs h-[26px]";
             div.innerHTML = `
-                <span class="font-mono text-gray-400"><i class="fa-solid fa-user text-[10px] text-gray-600 mr-1"></i> Member ${scrambledPhone}</span>
+                <span class="font-mono text-gray-600"><i class="fa-solid fa-user text-[10px] text-gray-400 mr-1"></i> Member ${scrambledPhone}</span>
                 <span class="text-gray-500">Withdraw <b class="text-neonGreen">₦${amount.toLocaleString()}</b></span>
             `;
             return div;
@@ -826,17 +820,16 @@
                 accountInput.value = '';
             }
 
-            // Sync Bold Account Card Data Display Area
             const boundBankArea = document.getElementById('bound-bank-display-area');
             if (boundBankArea) {
                 if (currentUser.bank_card) {
                     boundBankArea.innerHTML = `
-                        <div class="text-gray-400">Holder Name: <span class="text-white font-bold">${currentUser.bank_card.holder ? currentUser.bank_card.holder.toUpperCase() : 'N/A'}</span></div>
-                        <div class="text-gray-400">Account Number: <span class="text-neonGreen font-mono font-bold">${currentUser.bank_card.accountNumber}</span></div>
-                        <div class="text-gray-400">Bank Name: <span class="text-white font-bold">${currentUser.bank_card.bank}</span></div>
+                        <div class="text-gray-600">Holder Name: <span class="text-gray-900 font-bold">${currentUser.bank_card.holder ? currentUser.bank_card.holder.toUpperCase() : 'N/A'}</span></div>
+                        <div class="text-gray-600">Account Number: <span class="text-neonGreen font-mono font-bold">${currentUser.bank_card.accountNumber}</span></div>
+                        <div class="text-gray-600">Bank Name: <span class="text-gray-900 font-bold">${currentUser.bank_card.bank}</span></div>
                     `;
                 } else {
-                    boundBankArea.innerHTML = `<span class="text-gray-500 italic">No bank profile tied yet.</span>`;
+                    boundBankArea.innerHTML = `<span class="text-gray-400 italic">No bank profile tied yet.</span>`;
                 }
             }
 
@@ -880,12 +873,12 @@
             if (!isSubpanel) {
                 document.querySelectorAll('.nav-btn').forEach(btn => {
                     btn.classList.remove('text-neonGreen');
-                    btn.classList.add('text-gray-500');
+                    btn.classList.add('text-gray-400');
                 });
                 const activeNavBtn = document.getElementById(`nav-${tabId}`);
                 if (activeNavBtn) {
                     activeNavBtn.classList.add('text-neonGreen');
-                    activeNavBtn.classList.remove('text-gray-500');
+                    activeNavBtn.classList.remove('text-gray-400');
                 }
             }
         }
@@ -901,13 +894,13 @@
             });
 
             const progressHeader = document.createElement('div');
-            progressHeader.className = "mb-4 bg-darkBg p-3 rounded-xl border border-gray-900";
+            progressHeader.className = "mb-4 bg-darkBg p-3 rounded-xl border border-gray-200";
             progressHeader.innerHTML = `
                 <div class="flex justify-between text-xs font-semibold mb-1.5">
-                    <span class="text-gray-400">Daily Efficiency Index</span>
+                    <span class="text-gray-600">Daily Efficiency Index</span>
                     <span class="text-neonGreen font-mono">${completedCount} / ${tasks.length} Done</span>
                 </div>
-                <div class="w-full bg-gray-800 h-1.5 rounded-full overflow-hidden">
+                <div class="w-full bg-gray-200 h-1.5 rounded-full overflow-hidden">
                     <div class="bg-neonGreen h-full transition-all duration-500" style="width: ${(completedCount/tasks.length)*100}%"></div>
                 </div>
             `;
@@ -916,18 +909,18 @@
             tasks.forEach(t => {
                 const userCompleted = localStorage.getItem(`BH_TASK_${currentUser.phone}_${t.id}`);
                 const taskRow = document.createElement('div');
-                taskRow.className = "bg-darkBg border border-gray-900 p-3 rounded-xl flex justify-between items-center mb-2";
+                taskRow.className = "bg-darkBg border border-gray-200 p-3 rounded-xl flex justify-between items-center mb-2";
                 
                 let buttonHtml = '';
                 if (userCompleted) {
-                    buttonHtml = `<button disabled class="px-3 py-1.5 rounded-lg text-xs font-bold bg-gray-800 text-gray-500 cursor-not-allowed">Settled</button>`;
+                    buttonHtml = `<button disabled class="px-3 py-1.5 rounded-lg text-xs font-bold bg-gray-200 text-gray-400 cursor-not-allowed">Settled</button>`;
                 } else {
                     buttonHtml = `<button id="task-btn-${t.id}" onclick="startTaskWorkflow(${t.id}, ${t.reward})" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-neonGreen/10 text-neonGreen hover:bg-neonGreen/20 transition-all">Execute</button>`;
                 }
 
                 taskRow.innerHTML = `
                     <div>
-                        <div class="text-xs text-gray-300 font-medium">${t.title}</div>
+                        <div class="text-xs text-gray-700 font-medium">${t.title}</div>
                         <div class="text-[10px] text-neonGreen mt-0.5 font-mono">Allocation: +₦${t.reward.toLocaleString()}</div>
                     </div>
                     <div id="task-action-wrapper-${t.id}">${buttonHtml}</div>
@@ -953,7 +946,6 @@
             const hilltopScript = document.createElement('script');
             hilltopScript.type = 'text/javascript';
             hilltopScript.async = true;
-            
             hilltopScript.src = "\/\/deliciouslip.com\/bGXmVOs.dBG\/lG0HYmWPcO\/UeYmU9KuXZYUflRkJPNTycJxRNhDrMr0zMozuMhtVNEzcEQ0MMRzOQPzpN\/w-";
             adHolder.appendChild(hilltopScript)
 
@@ -997,41 +989,34 @@
             switchTab(lastPrimaryTab);
         }
 
-        // Handles System Rendering Rules for (img1, img2, img3)
         function renderProductGrid() {
             const container = document.getElementById('products-container');
             if (!container) return;
             container.innerHTML = '';
 
             const currentUserDevices = currentUser ? (currentUser.devices || []) : [];
-            
             const userOwnedIds = currentUserDevices.map(d => d.id);
             const owns10k = userOwnedIds.includes('v3');
             const owns6k = userOwnedIds.includes('v2');
 
             CORE_PRODUCTS.forEach((p, index) => {
-                if (owns10k && (p.id === 'v1' || p.id === 'v2')) {
-                    return; 
-                }
-
-                if (owns6k && p.id === 'v1') {
-                    return;
-                }
+                if (owns10k && (p.id === 'v1' || p.id === 'v2')) return; 
+                if (owns6k && p.id === 'v1') return;
 
                 const isRented = userOwnedIds.includes(p.id);
                 const card = document.createElement('div');
-                card.className = "bg-cardBg border border-gray-800 rounded-xl p-4 flex justify-between items-center hover:border-neonGreen/40 transition-all";
+                card.className = "bg-cardBg border border-gray-200 rounded-xl p-4 flex justify-between items-center hover:border-neonGreen/40 transition-all shadow-sm";
                 
                 let actionButtonHtml = '';
                 if (isRented) {
                     actionButtonHtml = `
-                        <button disabled class="bg-black border border-zinc-800 text-zinc-500 font-bold px-4 py-2 rounded-lg text-xs tracking-wide uppercase cursor-not-allowed">
+                        <button disabled class="bg-gray-100 border border-gray-200 text-gray-400 font-bold px-4 py-2 rounded-lg text-xs tracking-wide uppercase cursor-not-allowed">
                             Rented
                         </button>
                     `;
                 } else {
                     actionButtonHtml = `
-                        <button onclick="purchaseNode('${p.id}')" class="bg-neonGreen text-black font-extrabold px-4 py-2 rounded-lg text-xs tracking-wide uppercase hover:bg-neonGreenHover transition-all">
+                        <button onclick="purchaseNode('${p.id}')" class="bg-neonGreen text-white font-extrabold px-4 py-2 rounded-lg text-xs tracking-wide uppercase hover:bg-neonGreenHover transition-all shadow-sm">
                             Rent
                         </button>
                     `;
@@ -1039,8 +1024,8 @@
 
                 card.innerHTML = `
                     <div class="space-y-1">
-                        <h4 class="text-sm font-bold text-white">${p.name}</h4>
-                        <div class="text-xs text-gray-400">Compute ${index + 1}: <span class="text-white font-medium">₦${p.price.toLocaleString()}</span></div>
+                        <h4 class="text-sm font-bold text-gray-900">${p.name}</h4>
+                        <div class="text-xs text-gray-600">Compute ${index + 1}: <span class="text-gray-900 font-medium">₦${p.price.toLocaleString()}</span></div>
                         <div class="text-xs text-neonGreen">Daily Allocation: ₦${p.daily.toLocaleString()}</div>
                     </div>
                     ${actionButtonHtml}
@@ -1067,64 +1052,17 @@
             if(!container) return;
             container.innerHTML = '';
             if (!currentUser.devices || currentUser.devices.length === 0) {
-                container.innerHTML = `<div class="text-center py-6 border border-dashed border-gray-800 rounded-xl text-xs text-gray-500">No computing array instances currently deployed.</div>`;
+                container.innerHTML = `<div class="text-center py-6 border border-dashed border-gray-200 rounded-xl text-xs text-gray-400">No computing array instances currently deployed.</div>`;
                 return;
             }
             currentUser.devices.forEach(d => {
                 const devCard = document.createElement('div');
-                devCard.className = "bg-cardBg border-l-4 border-l-neonGreen border-gray-800 border p-3 rounded-r-xl flex justify-between items-center";
-                devCard.innerHTML = `<div><div class="text-xs font-bold text-white">${d.name}</div><div class="text-[10px] text-gray-500">Status: Compute running</div></div><div class="text-right"><div class="text-xs text-neonGreen font-mono font-bold">+₦${d.daily}/day</div></div>`;
+                devCard.className = "bg-cardBg border-l-4 border-l-neonGreen border-gray-200 border p-3 rounded-r-xl flex justify-between items-center shadow-sm";
+                devCard.innerHTML = `<div><div class="text-xs font-bold text-gray-900">${d.name}</div><div class="text-[10px] text-gray-500">Status: Compute running</div></div><div class="text-right"><div class="text-xs text-neonGreen font-mono font-bold">+₦${d.daily}/day</div></div>`;
                 container.appendChild(devCard);
             });
         }
 
-        function runNodeTest() {
-            const overlay = document.getElementById('node-test-overlay');
-            const terminal = document.getElementById('diagnostic-terminal');
-            const bar = document.getElementById('diagnostic-progress-bar');
-            const label = document.getElementById('diagnostic-percent');
-
-            terminal.innerHTML = '';
-            bar.style.width = '0%';
-            label.innerText = '0%';
-            overlay.classList.remove('hidden');
-
-            const logSequence = [
-                { txt: '> Hooking local system interface channels...', delay: 100, pct: 10 },
-                { txt: '> Injecting distributed AI system testing parameters...', delay: 400, pct: 25 },
-                { txt: '> Scanning memory matrix stability vectors: OK', delay: 800, pct: 45 },
-                { txt: '> Optimizing thread distribution allocation pools...', delay: 1200, pct: 60 },
-                { txt: '> Synchronizing encryption hash layers with network...', delay: 1600, pct: 85 },
-                { txt: '> [SUCCESS] Core cluster diagnostics complete.', delay: 2000, pct: 100 }
-            ];
-
-            logSequence.forEach(step => {
-                setTimeout(() => {
-                    const line = document.createElement('p');
-                    line.className = "text-white tracking-wide";
-                    if (step.txt.includes('SUCCESS')) line.className = "text-neonGreen font-bold";
-                    line.innerText = step.txt;
-                    terminal.appendChild(line);
-                    terminal.scrollTop = terminal.scrollHeight;
-                    
-                    bar.style.width = step.pct + '%';
-                    label.innerText = step.pct + '%';
-
-                    if (step.pct === 100) {
-                        setTimeout(() => {
-                            overlay.classList.add('hidden');
-                            
-                            const dynamicBoost = (Math.random() * (99.8 - 91.2) + 91.2).toFixed(1);
-                            document.getElementById('node-stream-index').innerText = dynamicBoost + "%";
-                            
-                            showNotification('Diagnostics Complete', `Systems synchronized. Efficiency optimized to ${dynamicBoost}%.`, true);
-                        }, 800);
-                    }
-                }, step.delay);
-            });
-        }
-
-        // Two depositing account method selection configurations
         function selectDepositMethod(method) {
             const card = document.getElementById('deposit-account-card');
             const form = document.getElementById('deposit-form-inputs');
@@ -1136,16 +1074,16 @@
                 palmpay: { bank: 'OPay', number: '6563725673', name: 'ESTHER OBIAGELI ADAMS' }
             };
 
-            btnOpay.classList.remove('border-neonGreen', 'bg-zinc-800');
-            btnPalm.classList.remove('border-neonGreen', 'bg-zinc-800');
+            btnOpay.classList.remove('border-neonGreen', 'bg-gray-100');
+            btnPalm.classList.remove('border-neonGreen', 'bg-gray-100');
 
             if (accounts[method]) {
                 document.getElementById('disp-bank').innerText = accounts[method].bank;
                 document.getElementById('disp-num').innerText = accounts[method].number;
                 document.getElementById('disp-name').innerText = accounts[method].name;
 
-                if (method === 'opay') btnOpay.classList.add('border-neonGreen', 'bg-zinc-800');
-                if (method === 'palmpay') btnPalm.classList.add('border-neonGreen', 'bg-zinc-800');
+                if (method === 'opay') btnOpay.classList.add('border-neonGreen', 'bg-gray-100');
+                if (method === 'palmpay') btnPalm.classList.add('border-neonGreen', 'bg-gray-100');
 
                 card.classList.remove('hidden');
                 form.classList.remove('hidden');
@@ -1165,8 +1103,8 @@
             
             const btnOpay = document.getElementById('btn-method-opay');
             const btnPalm = document.getElementById('btn-method-palmpay');
-            if(btnOpay) btnOpay.classList.remove('border-neonGreen', 'bg-zinc-800');
-            if(btnPalm) btnPalm.classList.remove('border-neonGreen', 'bg-zinc-800');
+            if(btnOpay) btnOpay.classList.remove('border-neonGreen', 'bg-gray-100');
+            if(btnPalm) btnPalm.classList.remove('border-neonGreen', 'bg-gray-100');
 
             document.getElementById('recharge-modal').classList.remove('hidden'); 
         }
@@ -1324,7 +1262,7 @@
         function filterBillLog(type) {
             activeBillFilter = type;
             document.querySelectorAll('[id^="bill-tab-"]').forEach(btn => {
-                btn.className = "w-1/3 pb-3 border-b-2 border-transparent text-gray-400 transition-all";
+                btn.className = "w-1/3 pb-3 border-b-2 border-transparent text-gray-500 transition-all";
             });
             document.getElementById(`bill-tab-${type}`).className = "w-1/3 pb-3 border-b-2 border-neonGreen text-neonGreen transition-all";
             renderBillLogs();
@@ -1351,19 +1289,19 @@
             emptyState.classList.add('hidden');
             filtered.forEach(b => {
                 const card = document.createElement('div');
-                card.className = "bg-cardBg border border-gray-800 p-4 rounded-xl flex justify-between items-center";
+                card.className = "bg-cardBg border border-gray-200 p-4 rounded-xl flex justify-between items-center shadow-sm";
                 
-                let statusColor = "text-yellow-500 font-medium";
+                let statusColor = "text-yellow-600 font-medium";
                 if(b.status === "Success") statusColor = "text-neonGreen font-semibold";
-                if(b.status.includes("Failed") || b.status.includes("Rejected")) statusColor = "text-red-500 font-semibold";
+                if(b.status.includes("Failed") || b.status.includes("Rejected")) statusColor = "text-red-600 font-semibold";
 
                 card.innerHTML = `
                     <div>
-                        <div class="text-xs font-bold text-white capitalize">${b.type} Transfer</div>
+                        <div class="text-xs font-bold text-gray-900 capitalize">${b.type} Transfer</div>
                         <div class="text-[10px] text-gray-500 mt-1">${b.date} • ID: ${b.id}</div>
                     </div>
                     <div class="text-right">
-                        <div class="text-sm font-mono font-bold ${b.type === 'recharge' ? 'text-neonGreen' : 'text-red-400'}">
+                        <div class="text-sm font-mono font-bold ${b.type === 'recharge' ? 'text-neonGreen' : 'text-red-500'}">
                             ${b.type === 'recharge' ? '+' : '-'}₦${b.amount.toLocaleString()}
                         </div>
                         <div class="text-[10px] mt-1 ${statusColor}">${b.status}</div>
@@ -1401,7 +1339,6 @@
             });
         }
 
-        // Initialize Live Ticker Setup
         document.addEventListener('DOMContentLoaded', () => {
             initLiveDepositTicker();
         });

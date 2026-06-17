@@ -134,6 +134,21 @@ app.post('/api/login', async (req, res) => {
         return res.status(500).json({ success: false, message: e.message });
     }
 });
+// --- ADD THIS TO YOUR SERVER.JS ---
+app.get('/api/admin/users', async (req, res) => {
+    try {
+        const { data: users, error } = await supabase
+            .from('profiles')
+            .select('*');
+
+        if (error) throw error;
+        return res.json({ success: true, users: users });
+    } catch (err) {
+        console.error("Backend Error:", err.message);
+        return res.status(500).json({ success: false, error: err.message });
+    }
+});
+
 app.post('/api/update-user', async (req, res) => {
     let { phone, balance, earnings, devices, bills, bank_card } = req.body;
 

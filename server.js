@@ -136,20 +136,24 @@ app.post('/api/login', async (req, res) => {
 });
 
 app.post('/api/update-user', async (req, res) => {
+    const { phone, balance, earnings, devices, bills, bank_card } = req.body;
+
     try {
-        const { phone, balance, earnings, devices, bills, bank_card } = req.body;
-        const { error } = await supabase.from(TABLE_NAME).update({
-            balance: Number(balance),
-            earnings: Number(earnings),
-            devices: typeof devices === 'object' ? JSON.stringify(devices) : devices,
-            bills: typeof bills === 'object' ? JSON.stringify(bills) : bills,
-            bank_card: typeof bank_card === 'object' ? JSON.stringify(bank_card) : bank_card
-        }).eq('phone', phone);
+        const { data, error } = await supabase.rpc('update_user_data', {
+            target_phone: phone,
+            new_balance: Number(balance),
+            new_earnings: Number(earnings),
+            new_devices: devices || [],
+            new_bills: bills || [],
+            new_bank_card: bank_card || null
+        });
 
         if (error) throw error;
+
         return res.json({ success: true });
-    } catch (e) {
-        return res.status(500).json({ success: false, message: e.message });
+    } catch (err) {
+        console.error("Supabase Error:", err.message);
+        return res.status(500).json({ success: false, error: err.message });
     }
 });
 

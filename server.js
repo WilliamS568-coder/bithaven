@@ -136,27 +136,52 @@ app.post('/api/login', async (req, res) => {
 });
 
 app.post('/api/update-user', async (req, res) => {
+    // Fallback to existing database values if the request doesn't provide them
     const { phone, balance, earnings, devices, bills, bank_card } = req.body;
 
-    try {
-        const { data, error } = await supabase.rpc('update_user_data', {
-            target_phone: phone,
-            new_balance: Number(balance),
-            new_earnings: Number(earnings),
-            new_devices: devices || [],
-            new_bills: bills || [],
-            new_bank_card: bank_card || null
-        });
+    if (!phone) {
+        return res.status(400).json({ success: false, message: "Phone number is required." });
+    }
 
-        if (error) throw error;
+    try {
+        // 1. Fetch current user state first to prevent overwriting existing data with undefined/null
+        const { data: user, error: fetchError } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('phone', phone)
+            .single();
+
+        if (fetchError || !user) {
+            return res.status(404).json({ success: false, message: "User profile not found." });
+        }
+
+        // 2. Use incoming values or keep the original ones if missing
+        const updatedBalance = balance !== undefined ? Number(balance) : user.balance;
+        const updatedEarnings = earnings !== undefined ? Number(earnings) : user.earnings;
+        const updatedDevices = devices || user.devices || [];
+        const updatedBills = bills || user.bills || [];
+        const updatedBankCard = bank_card !== undefined ? bank_card : user.bank_card;
+
+        // 3. Perform the update directly on the profiles table
+        const { error: updateError } = await supabase
+            .from('profiles')
+            .update({
+                balance: updatedBalance,
+                earnings: updatedEarnings,
+                devices: updatedDevices,
+                bills: updatedBills,
+                bank_card: updatedBankCard
+            })
+            .eq('phone', phone);
+
+        if (updateError) throw updateError;
 
         return res.json({ success: true });
     } catch (err) {
-        console.error("Supabase Error:", err.message);
+        console.error("Backend Update Error:", err.message);
         return res.status(500).json({ success: false, error: err.message });
     }
 });
-
 app.get('/api/user/:phone', async (req, res) => {
     try {
         const { data: user } = await supabase.from(TABLE_NAME).select('*').eq('phone', req.params.phone).maybeSingle();

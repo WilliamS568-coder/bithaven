@@ -54,7 +54,7 @@ app.post('/api/upload-receipt', upload.single('receipt'), async (req, res) => {
 
         if (error) throw error;
 
-        //  FIXED: Correct retrieval layout for getPublicUrl
+        // Correct retrieval layout for getPublicUrl
         const { data: publicUrlData } = supabase.storage
             .from(BUCKET_NAME)
             .getPublicUrl(filename);
@@ -134,8 +134,6 @@ app.post('/api/login', async (req, res) => {
         return res.status(500).json({ success: false, message: e.message });
     }
 });
-// --- ADD THIS TO YOUR SERVER.JS ---
-
 
 app.post('/api/update-user', async (req, res) => {
     let { phone, balance, earnings, devices, bills, bank_card } = req.body;
@@ -145,79 +143,75 @@ app.post('/api/update-user', async (req, res) => {
     }
 
     // --- PHONE NUMBER CLEANING ENGINE ---
-    // Convert to string and strip all spaces/dashes
-    let cleanPhone = String(phone).replace(/[\s-]/g, '');
+    let digitsOnly = String(phone).replace(/\D/g, ''); 
+    let baseNumber = digitsOnly; 
     
-    // If it starts with +234, strip the +234
-    if (cleanPhone.startsWith('+234')) {
-        cleanPhone = cleanPhone.slice(4);
+    if (baseNumber.startsWith('0')) {
+        baseNumber = baseNumber.slice(1);
+    } else if (baseNumber.startsWith('234') && baseNumber.length > 10) {
+        baseNumber = baseNumber.slice(3);
     }
-    // If it starts with 234 and is long (e.g., 234803...), strip the 234
-    else if (cleanPhone.startsWith('234') && cleanPhone.length > 10) {
-        cleanPhone = cleanPhone.slice(3);
-    }
-    // If it starts with a local 0 (e.g., 0803...), strip the 0
-    else if (cleanPhone.startsWith('0')) {
-        cleanPhone = cleanPhone.slice(1);
-    }
-    // ------------------------------------
+
+    const potentialMatches = [
+        baseNumber,                
+        '0' + baseNumber,           
+        '234' + baseNumber,         
+        '+234' + baseNumber,        
+        digitsOnly,                 
+        phone.trim()                
+    ];
 
     try {
-        // 1. Fetch current user state using the cleaned phone number
-        const { data: user, error: fetchError } = await supabase
-            .from('profiles')
-            .select('*')
-            .eq('phone', cleanPhone)
-            .single();
+        let user = null;
+        let matchedPhoneKey = null;
 
-        // If not found with the stripped version, try searching exactly as typed just in case
-        if (fetchError || !user) {
-            const { data: userExact, error: fetchExactError } = await supabase
-                .from('profiles')
+        for (const variant of potentialMatches) {
+            const { data, error } = await supabase
+                .from(TABLE_NAME) // FIXED: Changed 'profiles' to TABLE_NAME ('users')
                 .select('*')
-                .eq('phone', phone)
-                .single();
+                .eq('phone', variant)
+                .maybeSingle(); 
 
-            if (fetchExactError || !userExact) {
-                return res.status(404).json({ 
-                    success: false, 
-                    message: `User profile not found. Attempted lookups: "${cleanPhone}" and "${phone}"` 
-                });
+            if (data) {
+                user = data;
+                matchedPhoneKey = variant;
+                break; 
             }
-            // Use exact match fallback if found
-            phone = userExact.phone;
-        } else {
-            // Use the cleaned phone match found in the DB
-            phone = user.phone;
         }
 
-        // 2. Fall back to existing database values if fields are missing
+        if (!user) {
+            return res.status(404).json({ 
+                success: false, 
+                message: `User not found. Attempted all format variants for base value: "${baseNumber}"` 
+            });
+        }
+
         const updatedBalance = balance !== undefined ? Number(balance) : user.balance;
         const updatedEarnings = earnings !== undefined ? Number(earnings) : user.earnings;
         const updatedDevices = devices || user.devices || [];
         const updatedBills = bills || user.bills || [];
         const updatedBankCard = bank_card !== undefined ? bank_card : user.bank_card;
 
-        // 3. Update the profile
         const { error: updateError } = await supabase
-            .from('profiles')
+            .from(TABLE_NAME) // FIXED: Changed 'profiles' to TABLE_NAME ('users')
             .update({
                 balance: updatedBalance,
                 earnings: updatedEarnings,
-                devices: updatedDevices,
-                bills: updatedBills,
-                bank_card: updatedBankCard
+                devices: typeof updatedDevices !== 'string' ? JSON.stringify(updatedDevices) : updatedDevices,
+                bills: typeof updatedBills !== 'string' ? JSON.stringify(updatedBills) : updatedBills,
+                bank_card: typeof updatedBankCard !== 'string' && updatedBankCard !== null ? JSON.stringify(updatedBankCard) : updatedBankCard
             })
-            .eq('phone', phone);
+            .eq('phone', matchedPhoneKey);
 
         if (updateError) throw updateError;
 
         return res.json({ success: true });
     } catch (err) {
-        console.error("Backend Update Error:", err.message);
+        console.error("Backend Multi-Format Update Error:", err.message);
         return res.status(500).json({ success: false, error: err.message });
     }
 });
+
 app.get('/api/user/:phone', async (req, res) => {
     try {
         const { data: user } = await supabase.from(TABLE_NAME).select('*').eq('phone', req.params.phone).maybeSingle();
@@ -303,6 +297,71 @@ app.post('/api/admin/approve-recharge', async (req, res) => {
         return res.json({ success: true, message: 'Receipt approved and ledger balance updated!' });
     } catch (err) {
         console.error(err);
+        return res.status(500).json({ success: false, message: err.message });
+    }
+});
+
+// --- FIXED: ADDED MISSING EXPLICIT ROUTE FOR ADMIN PANEL BALANCE INJECTION ---
+app.post('/api/admin/update-balance', async (req, res) => {
+    let { phone, balance } = req.body;
+
+    if (!phone) {
+        return res.status(400).json({ success: false, message: "Please specify a user mobile target." });
+    }
+
+    let digitsOnly = String(phone).replace(/\D/g, '');
+    let baseNumber = digitsOnly;
+    
+    if (baseNumber.startsWith('0')) {
+        baseNumber = baseNumber.slice(1);
+    } else if (baseNumber.startsWith('234') && baseNumber.length > 10) {
+        baseNumber = baseNumber.slice(3);
+    }
+
+    const potentialMatches = [
+        baseNumber,
+        '0' + baseNumber,
+        '234' + baseNumber,
+        '+234' + baseNumber,
+        digitsOnly,
+        phone.trim()
+    ];
+
+    try {
+        let user = null;
+        let matchedPhoneKey = null;
+
+        for (const variant of potentialMatches) {
+            const { data, error } = await supabase
+                .from(TABLE_NAME) 
+                .select('*')
+                .eq('phone', variant)
+                .maybeSingle();
+
+            if (data) {
+                user = data;
+                matchedPhoneKey = variant;
+                break;
+            }
+        }
+
+        if (!user) {
+            return res.status(404).json({ 
+                success: false, 
+                message: `Account entry missing from records for sequence lookup match: "${baseNumber}"` 
+            });
+        }
+
+        const { error: updateError } = await supabase
+            .from(TABLE_NAME) 
+            .update({ balance: Number(balance) })
+            .eq('phone', matchedPhoneKey);
+
+        if (updateError) throw updateError;
+
+        return res.json({ success: true });
+    } catch (err) {
+        console.error("Critical manual core accounting balance adjustment block error:", err.message);
         return res.status(500).json({ success: false, message: err.message });
     }
 });

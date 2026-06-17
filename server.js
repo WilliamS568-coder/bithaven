@@ -134,35 +134,68 @@ app.post('/api/login', async (req, res) => {
         return res.status(500).json({ success: false, message: e.message });
     }
 });
-
 app.post('/api/update-user', async (req, res) => {
-    // Fallback to existing database values if the request doesn't provide them
-    const { phone, balance, earnings, devices, bills, bank_card } = req.body;
+    let { phone, balance, earnings, devices, bills, bank_card } = req.body;
 
     if (!phone) {
         return res.status(400).json({ success: false, message: "Phone number is required." });
     }
 
+    // --- PHONE NUMBER CLEANING ENGINE ---
+    // Convert to string and strip all spaces/dashes
+    let cleanPhone = String(phone).replace(/[\s-]/g, '');
+    
+    // If it starts with +234, strip the +234
+    if (cleanPhone.startsWith('+234')) {
+        cleanPhone = cleanPhone.slice(4);
+    }
+    // If it starts with 234 and is long (e.g., 234803...), strip the 234
+    else if (cleanPhone.startsWith('234') && cleanPhone.length > 10) {
+        cleanPhone = cleanPhone.slice(3);
+    }
+    // If it starts with a local 0 (e.g., 0803...), strip the 0
+    else if (cleanPhone.startsWith('0')) {
+        cleanPhone = cleanPhone.slice(1);
+    }
+    // ------------------------------------
+
     try {
-        // 1. Fetch current user state first to prevent overwriting existing data with undefined/null
+        // 1. Fetch current user state using the cleaned phone number
         const { data: user, error: fetchError } = await supabase
             .from('profiles')
             .select('*')
-            .eq('phone', phone)
+            .eq('phone', cleanPhone)
             .single();
 
+        // If not found with the stripped version, try searching exactly as typed just in case
         if (fetchError || !user) {
-            return res.status(404).json({ success: false, message: "User profile not found." });
+            const { data: userExact, error: fetchExactError } = await supabase
+                .from('profiles')
+                .select('*')
+                .eq('phone', phone)
+                .single();
+
+            if (fetchExactError || !userExact) {
+                return res.status(404).json({ 
+                    success: false, 
+                    message: `User profile not found. Attempted lookups: "${cleanPhone}" and "${phone}"` 
+                });
+            }
+            // Use exact match fallback if found
+            phone = userExact.phone;
+        } else {
+            // Use the cleaned phone match found in the DB
+            phone = user.phone;
         }
 
-        // 2. Use incoming values or keep the original ones if missing
+        // 2. Fall back to existing database values if fields are missing
         const updatedBalance = balance !== undefined ? Number(balance) : user.balance;
         const updatedEarnings = earnings !== undefined ? Number(earnings) : user.earnings;
         const updatedDevices = devices || user.devices || [];
         const updatedBills = bills || user.bills || [];
         const updatedBankCard = bank_card !== undefined ? bank_card : user.bank_card;
 
-        // 3. Perform the update directly on the profiles table
+        // 3. Update the profile
         const { error: updateError } = await supabase
             .from('profiles')
             .update({

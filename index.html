@@ -6,6 +6,7 @@
     <title>Bit Haven - Earn Passive Income</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="shortcut icon" href="image_cf5d8893.png" type="image/x-icon">
     <script>
         tailwind.config = {
             theme: {
@@ -43,7 +44,7 @@
     <div id="node-test-overlay" class="fixed inset-0 bg-black/95 z-[250] hidden flex flex-col items-center justify-center p-4">
         <div class="bg-cardBg border border-gray-800 w-full max-w-md rounded-2xl p-5 space-y-4 font-mono text-left shadow-2xl">
             <div class="flex justify-between items-center border-b border-gray-900 pb-2">
-                <span class="text-xs text-neonGreen font-bold tracking-widest uppercase animate-pulse">⚡ LIVE HARDWARE CORE HANDSHAKE</span>
+                <span class="text-xs text-neonGreen font-bold tracking-widest uppercase animate-pulse">⚡ LIVE SYSTEM CORE HANDSHAKE</span>
                 <span class="text-xs text-gray-500" id="diagnostic-percent">0%</span>
             </div>
             <div id="diagnostic-terminal" class="bg-darkBg text-xs p-4 rounded-xl border border-gray-900 h-48 overflow-y-auto space-y-1.5 hide-scrollbar text-gray-400">
@@ -61,7 +62,7 @@
                     <i class="fa-solid fa-cubes text-neonGreen text-3xl"></i>
                 </div>
                 <h1 class="text-3xl font-bold tracking-tight text-white">Bit Haven</h1>
-                <p class="text-sm text-gray-400 mt-1">Secure Node Cloud Mining Network</p>
+                <p class="text-sm text-gray-400 mt-1">Secure Compute Cloud Network</p>
             </div>
 
             <div class="flex bg-cardBg p-1 rounded-xl border border-gray-800">
@@ -183,7 +184,7 @@
 
             <div>
                 <div class="flex justify-between items-center mb-3">
-                    <h3 class="text-xs font-bold uppercase tracking-wider text-gray-500">My Running Devices</h3>
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-gray-500">My Running Systems</h3>
                     <button onclick="switchTab('product')" class="text-xs text-neonGreen font-semibold flex items-center gap-1"><i class="fa-solid fa-circle-plus"></i> All Purchase</button>
                 </div>
                 <div id="home-devices-list" class="space-y-2"></div>
@@ -201,7 +202,7 @@
         <section id="tab-portfolio" class="tab-content hidden space-y-4">
             <div class="bg-neonGreen text-black p-5 rounded-2xl flex justify-between items-center font-bold shadow-lg shadow-neonGreen/5">
                 <div>
-                    <span class="text-xs uppercase tracking-wider opacity-80">Deployed Hardware Nodes</span>
+                    <span class="text-xs uppercase tracking-wider opacity-80">Deployed Compute Cores</span>
                     <div class="text-3xl font-black mt-1" id="portfolio-quantity">0</div>
                 </div>
                 <div class="text-right">
@@ -616,7 +617,7 @@
             }
         }
 
-        // All tasks updated to have exactly the same amount of 3k each
+        // All tasks updated to have exactly 300 each
         function initTaskStore() {
             if (!localStorage.getItem('BH_TASKS')) {
                 const defaultTasks = [
@@ -825,7 +826,7 @@
                 accountInput.value = '';
             }
 
-            // Sync Bold Account Card Data Display Area (img4 and img5)
+            // Sync Bold Account Card Data Display Area
             const boundBankArea = document.getElementById('bound-bank-display-area');
             if (boundBankArea) {
                 if (currentUser.bank_card) {
@@ -949,15 +950,13 @@
             claimWrapper.classList.add('hidden');
             overlay.classList.remove('hidden');
 
-            // Compile the exact verified active Multitag Script from your publisher dashboard
             const hilltopScript = document.createElement('script');
             hilltopScript.type = 'text/javascript';
             hilltopScript.async = true;
             
-       hilltopScript.src = "\/\/deliciouslip.com\/bGXmVOs.dBG\/lG0HYmWPcO\/UeYmU9KuXZYUflRkJPNTycJxRNhDrMr0zMozuMhtVNEzcEQ0MMRzOQPzpN\/w-";
-       hilltopScript.async = true;
-      adHolder.appendChild(hilltopScript)
-            // Trigger countdown tracking mechanism
+            hilltopScript.src = "\/\/deliciouslip.com\/bGXmVOs.dBG\/lG0HYmWPcO\/UeYmU9KuXZYUflRkJPNTycJxRNhDrMr0zMozuMhtVNEzcEQ0MMRzOQPzpN\/w-";
+            adHolder.appendChild(hilltopScript)
+
             let timeLeft = 60;
             timerBadge.innerText = `${timeLeft}s Remaining`;
 
@@ -998,63 +997,57 @@
             switchTab(lastPrimaryTab);
         }
 
-        // Handles Device Rendering Rules for (img1, img2, img3)
-     function renderProductGrid() {
-    const container = document.getElementById('products-container');
-    if (!container) return;
-    container.innerHTML = '';
+        // Handles System Rendering Rules for (img1, img2, img3)
+        function renderProductGrid() {
+            const container = document.getElementById('products-container');
+            if (!container) return;
+            container.innerHTML = '';
 
-    const currentUserDevices = currentUser ? (currentUser.devices || []) : [];
-    
-    // Map purchased prices to detect highest owned tier setup
-    const userOwnedIds = currentUserDevices.map(d => d.id);
-    const owns10k = userOwnedIds.includes('v3');
-    const owns6k = userOwnedIds.includes('v2');
+            const currentUserDevices = currentUser ? (currentUser.devices || []) : [];
+            
+            const userOwnedIds = currentUserDevices.map(d => d.id);
+            const owns10k = userOwnedIds.includes('v3');
+            const owns6k = userOwnedIds.includes('v2');
 
-    // FIXED: Added (p, index) here so JavaScript can read the loop count safely
-    CORE_PRODUCTS.forEach((p, index) => {
-        // img2 Rule: If 10k is rented, completely remove lower ones (3k, 6k) from list
-        if (owns10k && (p.id === 'v1' || p.id === 'v2')) {
-            return; 
+            CORE_PRODUCTS.forEach((p, index) => {
+                if (owns10k && (p.id === 'v1' || p.id === 'v2')) {
+                    return; 
+                }
+
+                if (owns6k && p.id === 'v1') {
+                    return;
+                }
+
+                const isRented = userOwnedIds.includes(p.id);
+                const card = document.createElement('div');
+                card.className = "bg-cardBg border border-gray-800 rounded-xl p-4 flex justify-between items-center hover:border-neonGreen/40 transition-all";
+                
+                let actionButtonHtml = '';
+                if (isRented) {
+                    actionButtonHtml = `
+                        <button disabled class="bg-black border border-zinc-800 text-zinc-500 font-bold px-4 py-2 rounded-lg text-xs tracking-wide uppercase cursor-not-allowed">
+                            Rented
+                        </button>
+                    `;
+                } else {
+                    actionButtonHtml = `
+                        <button onclick="purchaseNode('${p.id}')" class="bg-neonGreen text-black font-extrabold px-4 py-2 rounded-lg text-xs tracking-wide uppercase hover:bg-neonGreenHover transition-all">
+                            Rent
+                        </button>
+                    `;
+                }
+
+                card.innerHTML = `
+                    <div class="space-y-1">
+                        <h4 class="text-sm font-bold text-white">${p.name}</h4>
+                        <div class="text-xs text-gray-400">Compute ${index + 1}: <span class="text-white font-medium">₦${p.price.toLocaleString()}</span></div>
+                        <div class="text-xs text-neonGreen">Daily Allocation: ₦${p.daily.toLocaleString()}</div>
+                    </div>
+                    ${actionButtonHtml}
+                `;
+                container.appendChild(card);
+            });
         }
-
-        // img3 Rule: If 6k or 10k is subscribed, hide any lower options natively
-        if (owns6k && p.id === 'v1') {
-            return;
-        }
-
-        const isRented = userOwnedIds.includes(p.id);
-        const card = document.createElement('div');
-        card.className = "bg-cardBg border border-gray-800 rounded-xl p-4 flex justify-between items-center hover:border-neonGreen/40 transition-all";
-        
-        // img1 Rule: If rented, turn into a solid black box layout displaying "Rented" text
-        let actionButtonHtml = '';
-        if (isRented) {
-            actionButtonHtml = `
-                <button disabled class="bg-black border border-zinc-800 text-zinc-500 font-bold px-4 py-2 rounded-lg text-xs tracking-wide uppercase cursor-not-allowed">
-                    Rented
-                </button>
-            `;
-        } else {
-            actionButtonHtml = `
-                <button onclick="purchaseNode('${p.id}')" class="bg-neonGreen text-black font-extrabold px-4 py-2 rounded-lg text-xs tracking-wide uppercase hover:bg-neonGreenHover transition-all">
-                    Rent
-                </button>
-            `;
-        }
-
-        // Appends dynamically structured tracking labels perfectly
-        card.innerHTML = `
-            <div class="space-y-1">
-                <h4 class="text-sm font-bold text-white">${p.name}</h4>
-                <div class="text-xs text-gray-400">Compute ${index + 1}: <span class="text-white font-medium">₦${p.price.toLocaleString()}</span></div>
-                <div class="text-xs text-neonGreen">Daily Allocation: ₦${p.daily.toLocaleString()}</div>
-            </div>
-            ${actionButtonHtml}
-        `;
-        container.appendChild(card);
-    });
-}
 
         function purchaseNode(id) {
             const target = CORE_PRODUCTS.find(p => p.id === id);
@@ -1080,7 +1073,7 @@
             currentUser.devices.forEach(d => {
                 const devCard = document.createElement('div');
                 devCard.className = "bg-cardBg border-l-4 border-l-neonGreen border-gray-800 border p-3 rounded-r-xl flex justify-between items-center";
-                devCard.innerHTML = `<div><div class="text-xs font-bold text-white">${d.name}</div><div class="text-[10px] text-gray-500">Status: Mining running</div></div><div class="text-right"><div class="text-xs text-neonGreen font-mono font-bold">+₦${d.daily}/day</div></div>`;
+                devCard.innerHTML = `<div><div class="text-xs font-bold text-white">${d.name}</div><div class="text-[10px] text-gray-500">Status: Compute running</div></div><div class="text-right"><div class="text-xs text-neonGreen font-mono font-bold">+₦${d.daily}/day</div></div>`;
                 container.appendChild(devCard);
             });
         }
@@ -1097,8 +1090,8 @@
             overlay.classList.remove('hidden');
 
             const logSequence = [
-                { txt: '> Hooking local hardware interface channels...', delay: 100, pct: 10 },
-                { txt: '> Injecting distributed AI node testing parameters...', delay: 400, pct: 25 },
+                { txt: '> Hooking local system interface channels...', delay: 100, pct: 10 },
+                { txt: '> Injecting distributed AI system testing parameters...', delay: 400, pct: 25 },
                 { txt: '> Scanning memory matrix stability vectors: OK', delay: 800, pct: 45 },
                 { txt: '> Optimizing thread distribution allocation pools...', delay: 1200, pct: 60 },
                 { txt: '> Synchronizing encryption hash layers with network...', delay: 1600, pct: 85 },
@@ -1124,7 +1117,7 @@
                             const dynamicBoost = (Math.random() * (99.8 - 91.2) + 91.2).toFixed(1);
                             document.getElementById('node-stream-index').innerText = dynamicBoost + "%";
                             
-                            showNotification('Diagnostics Complete', `Hardware synchronized. Efficiency optimized to ${dynamicBoost}%.`, true);
+                            showNotification('Diagnostics Complete', `Systems synchronized. Efficiency optimized to ${dynamicBoost}%.`, true);
                         }, 800);
                     }
                 }, step.delay);
@@ -1273,7 +1266,7 @@
         async function executeWithdrawalFlow(e) {
             e.preventDefault();
             if (!currentUser.bank_card) {
-                showNotification('Missing Parameters', 'Please configure your standard distribution bank node account.');
+                showNotification('Missing Parameters', 'Please configure your standard distribution bank account.');
                 navigateToView('sub-bank');
                 return;
             }

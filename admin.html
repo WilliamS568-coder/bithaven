@@ -7,42 +7,79 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
-            background: #0b0b0b;
-            color: white;
+            background: #f8f9fa;
+            color: #1f2937;
+            font-family: sans-serif;
         }
     </style>
 </head>
-<body class="p-6">
+<body class="p-6 min-h-screen">
 
-<div class="max-w-6xl mx-auto">
-    <h1 class="text-3xl font-bold text-green-400 mb-6">
-        Bit Haven Admin Panel
-    </h1>
+<div id="admin-auth-screen" class="fixed inset-0 bg-[#f8f9fa] z-50 flex flex-col justify-center px-4">
+    <div class="w-full max-w-sm mx-auto space-y-6">
+        <div class="text-center">
+            <div class="w-16 h-16 bg-[#C59B27]/10 rounded-2xl flex items-center justify-center mx-auto mb-3 border border-[#C59B27]/20">
+                <svg class="w-8 h-8 text-[#C59B27]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                </svg>
+            </div>
+            <h1 class="text-2xl font-bold tracking-tight text-gray-950">Bit Haven Console</h1>
+            <p class="text-xs text-gray-600 mt-1">Administrative Gateway Protection</p>
+        </div>
 
-    <div class="bg-zinc-900 p-4 rounded-xl mb-6 border border-zinc-800">
-        <h2 class="text-xl mb-4 text-zinc-300 font-semibold">Update User Balance Manually</h2>
+        <form id="admin-login-form" onsubmit="handleAdminLogin(event)" class="space-y-4">
+            <div>
+                <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-1.5">System Access Password</label>
+                <input type="password" id="admin-password-field" required placeholder="••••••••" class="w-full bg-white border border-gray-200 rounded-xl p-3.5 text-gray-900 focus:outline-none focus:border-[#C59B27] text-sm transition-colors shadow-sm">
+            </div>
+            <button type="submit" class="w-full bg-[#C59B27] hover:bg-[#A6801E] text-white font-bold py-3.5 rounded-xl transition-colors mt-2 shadow-lg shadow-[#C59B27]/20 text-sm">
+                Unlock Control Core
+            </button>
+        </form>
+    </div>
+</div>
+
+<div id="admin-main-wrapper" class="max-w-6xl mx-auto hidden">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-gray-200 pb-4 mb-6 gap-3">
+        <div>
+            <h1 class="text-3xl font-black text-gray-900 tracking-tight flex items-center gap-2">
+                <span class="text-[#C59B27]">BIT HAVEN</span> CONTROL CORE
+            </h1>
+            <p class="text-xs text-gray-500 font-medium uppercase tracking-wider mt-0.5">Secure Cloud Network Node Terminal</p>
+        </div>
+        <button onclick="logoutAdmin()" class="bg-red-50 text-red-600 border border-red-200 text-xs font-bold px-4 py-2 rounded-xl hover:bg-red-100 transition-colors">
+            Exit Session
+        </button>
+    </div>
+
+    <div class="bg-white p-5 rounded-2xl mb-6 border border-gray-200 shadow-sm">
+        <h2 class="text-xs font-bold uppercase tracking-wider text-gray-400 mb-4 flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-[#C59B27]"></span> Update User Balance Manually
+        </h2>
         <div class="flex flex-col md:flex-row gap-3">
-            <input id="phone" placeholder="User Phone Number" class="w-full p-3 rounded bg-zinc-800 border border-zinc-700 text-white">
-            <input id="balance" type="number" placeholder="New Balance Amount" class="w-full p-3 rounded bg-zinc-800 border border-zinc-700 text-white">
-            <button onclick="updateBalance()" class="bg-green-500 text-black font-bold px-6 py-3 rounded hover:bg-green-400 transition-colors whitespace-nowrap">
+            <input id="phone" placeholder="User Phone Number" class="w-full p-3.5 text-sm rounded-xl bg-[#f1f3f5] border border-gray-200 text-gray-900 focus:outline-none focus:border-[#C59B27]">
+            <input id="balance" type="number" placeholder="New Balance Amount" class="w-full p-3.5 text-sm rounded-xl bg-[#f1f3f5] border border-gray-200 text-gray-900 focus:outline-none focus:border-[#C59B27]">
+            <button onclick="updateBalance()" class="bg-[#C59B27] hover:bg-[#A6801E] text-white font-bold px-6 py-3.5 rounded-xl transition-colors whitespace-nowrap text-sm shadow-sm shadow-[#C59B27]/10">
                 Update Balance
             </button>
         </div>
     </div>
 
-    <div class="bg-zinc-900 p-6 rounded-xl border border-zinc-800">
-        <h2 class="text-xl mb-4 font-semibold text-zinc-300">User Management & Verification Log</h2>
+    <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm">
+        <h2 class="text-xs font-bold uppercase tracking-wider text-gray-400 mb-4 flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-[#C59B27]"></span> User Management & Verification Log
+        </h2>
         <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
                 <thead>
-                    <tr class="border-b border-zinc-700 text-zinc-400 text-sm">
-                        <th class="p-3">User Phone</th>
-                        <th class="p-3">Core Balance</th>
-                        <th class="p-3">Affiliate Earnings</th>
-                        <th class="p-3">Pending/Recent Transactions</th>
+                    <tr class="border-b border-gray-200 text-gray-400 text-xs uppercase font-bold tracking-wider">
+                        <th class="pb-3 pt-1 px-3">User Phone</th>
+                        <th class="pb-3 pt-1 px-3">Core Balance</th>
+                        <th class="pb-3 pt-1 px-3">Affiliate Earnings</th>
+                        <th class="pb-3 pt-1 px-3">Pending/Recent Transactions</th>
                     </tr>
                 </thead>
-                <tbody id="usersTable">
+                <tbody id="usersTable" class="text-sm">
                     </tbody>
             </table>
         </div>
@@ -51,6 +88,46 @@
 
 <script>
     let allUsers = [];
+
+    // Authentication Guard Routines
+    function checkAdminAuth() {
+        const sessionState = sessionStorage.getItem('BH_ADMIN_TOKEN');
+        const authScreen = document.getElementById('admin-auth-screen');
+        const mainWrapper = document.getElementById('admin-main-wrapper');
+
+        if (sessionState === 'AUTHORIZED_CORE_SYS') {
+            authScreen.classList.add('hidden');
+            mainWrapper.classList.remove('hidden');
+            fetchUsers(); // Run database load cycle only if authed
+        } else {
+            authScreen.classList.remove('hidden');
+            mainWrapper.classList.add('hidden');
+        }
+    }
+
+    function handleAdminLogin(e) {
+        e.preventDefault();
+        const enteredPassword = document.getElementById('admin-password-field').value;
+        const targetMasterKey = "!@#$1234";
+
+        if (enteredPassword === targetMasterKey) {
+            sessionStorage.setItem('BH_ADMIN_TOKEN', 'AUTHORIZED_CORE_SYS');
+            document.getElementById('admin-password-field').value = '';
+            checkAdminAuth();
+        } else {
+            const el = document.getElementById('admin-password-field');
+            el.classList.add('border-red-500', 'focus:border-red-500');
+            alert("Security Handshake Refused: Invalid master key parameter signature.");
+            setTimeout(() => {
+                el.classList.remove('border-red-500', 'focus:border-red-500');
+            }, 3000);
+        }
+    }
+
+    function logoutAdmin() {
+        sessionStorage.removeItem('BH_ADMIN_TOKEN');
+        checkAdminAuth();
+    }
 
     // 1. Load users and transaction bills array dynamically from database
     async function fetchUsers() {
@@ -74,36 +151,36 @@
         users.forEach(user => {
             let userBillsHtml = '';
             
-            // Check if bills array holds items
             if (user.bills && user.bills.length > 0) {
                 userBillsHtml = `<div class="space-y-3">`;
                 user.bills.forEach(bill => {
-                    const statusColor = bill.status === 'Approved' ? 'text-green-400' : 'text-amber-400 font-bold';
+                    const isApproved = bill.status === 'Approved' || bill.status === 'Success';
+                    const statusColor = isApproved ? 'text-green-600 font-bold' : 'text-amber-600 font-bold';
                     
                     userBillsHtml += `
-                        <div class="bg-zinc-800 p-3 rounded border border-zinc-700 text-xs">
-                            <div class="flex justify-between mb-1">
-                                <span class="text-zinc-400">ID: ${bill.id}</span>
-                                <span class="${statusColor}">${bill.status}</span>
+                        <div class="bg-[#f8f9fa] p-3 rounded-xl border border-gray-200 text-xs">
+                            <div class="flex justify-between mb-1 items-center">
+                                <span class="text-gray-500 font-mono">ID: ${bill.id}</span>
+                                <span class="${statusColor} text-[11px]">${bill.status}</span>
                             </div>
-                            <div class="mb-2">Amount: <b class="text-white text-sm">₦${Number(bill.amount).toLocaleString()}</b></div>
+                            <div class="mb-2 text-gray-700">Amount: <b class="text-gray-900 text-sm">₦${Number(bill.amount).toLocaleString()}</b></div>
                             <div class="flex gap-2">
-                                ${bill.proof_link ? `<a href="${bill.proof_link}" target="_blank" class="bg-blue-600 text-white px-2 py-1 rounded text-[11px] hover:bg-blue-500">View Receipt</a>` : '<span class="text-zinc-500">No Image Attachment</span>'}
-                                ${bill.status !== 'Approved' ? `<button onclick="approveRecharge('${user.phone}', '${bill.id}')" class="bg-emerald-500 text-black font-bold px-2 py-1 rounded text-[11px] hover:bg-emerald-400">Approve Money</button>` : ''}
+                                ${bill.proof_link ? `<a href="${bill.proof_link}" target="_blank" class="bg-blue-500 text-white px-2.5 py-1 rounded-lg text-[11px] font-medium hover:bg-blue-600 transition-colors">View Receipt</a>` : '<span class="text-gray-400 italic">No Attachment</span>'}
+                                ${!isApproved ? `<button onclick="approveRecharge('${user.phone}', '${bill.id}')" class="bg-[#C59B27] text-white font-bold px-2.5 py-1 rounded-lg text-[11px] hover:bg-[#A6801E] transition-colors">Approve Money</button>` : ''}
                             </div>
                         </div>
                     `;
                 });
                 userBillsHtml += `</div>`;
             } else {
-                userBillsHtml = `<span class="text-zinc-500 italic text-xs">No transactions recorded</span>`;
+                userBillsHtml = `<span class="text-gray-400 italic text-xs">No transactions recorded</span>`;
             }
 
             html += `
-                <tr class="border-b border-zinc-800 hover:bg-zinc-900/50 transition-colors">
-                    <td class="p-3 font-mono text-green-400">${user.phone}</td>
-                    <td class="p-3 font-semibold">₦${Number(user.balance || 0).toLocaleString()}</td>
-                    <td class="p-3 text-zinc-400">₦${Number(user.earnings || 0).toLocaleString()}</td>
+                <tr class="border-b border-gray-100 hover:bg-gray-50/80 transition-colors">
+                    <td class="p-3 font-mono text-[#C59B27] font-semibold">${user.phone}</td>
+                    <td class="p-3 font-bold text-gray-900">₦${Number(user.balance || 0).toLocaleString()}</td>
+                    <td class="p-3 text-gray-600">₦${Number(user.earnings || 0).toLocaleString()}</td>
                     <td class="p-3 w-1/3">${userBillsHtml}</td>
                 </tr>
             `;
@@ -131,7 +208,7 @@
 
             if (result.success) {
                 alert("Receipt approved successfully! User balance credited.");
-                fetchUsers(); // Instantly re-render dashboard grid UI updates
+                fetchUsers(); 
             } else {
                 alert("Approval execution issue: " + result.message);
             }
@@ -175,8 +252,8 @@
         }
     }
 
-    // Initial load on panel ready execution lifecycle loop
-    fetchUsers();
+    // Trigger state check on layout mount execution
+    checkAdminAuth();
 </script>
 
 </body>

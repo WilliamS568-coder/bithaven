@@ -221,16 +221,20 @@ function settleProductDailyEarnings(user, nowMs = Date.now()) {
 
     const MS_PER_DAY = 24 * 60 * 60 * 1000;
 
-    // Settles once per whole day per device, capped by duration.
-    for (const dev of user.devices) {
-        if (!dev || !dev.purchaseDate) continue;
+        // Settles once per whole day per device.
+        // Rules:
+        // - Earnings start AFTER 7 full days have passed from purchaseDate.
+        // - Earnings expire AFTER durationDays days of earning (default: 30).
+        for (const dev of user.devices) {
+            if (!dev || !dev.purchaseDate) continue;
 
-        const purchaseMs = new Date(dev.purchaseDate).getTime();
-        if (!Number.isFinite(purchaseMs)) continue;
+            const purchaseMs = new Date(dev.purchaseDate).getTime();
+            if (!Number.isFinite(purchaseMs)) continue;
 
-        const durationDays = Number(dev.duration ?? 30);
-        const daily = Number(dev.daily ?? 0);
-        if (!daily || durationDays <= 0) continue;
+            const durationDays = Number(dev.duration ?? 30);
+            const daily = Number(dev.daily ?? 0);
+            if (!daily || durationDays <= 0) continue;
+
 
         // Guard fields for repeat protection
         // - lastPaidAt: timestamp (ms) when we last credited
@@ -243,14 +247,20 @@ function settleProductDailyEarnings(user, nowMs = Date.now()) {
         const lastPaidAtMs = dev.lastPaidAt ? new Date(dev.lastPaidAt).getTime() : null;
 
         const elapsedWholeDays = Math.floor((nowMs - purchaseMs) / MS_PER_DAY);
-        if (elapsedWholeDays <= 0) continue;
+
+        // earnings start after 7 full days
+        const earningStartDay = 7;
+        if (elapsedWholeDays < earningStartDay) continue;
+
+        const effectiveEarnedDays = elapsedWholeDays - earningStartDay;
 
         const alreadyPaidDays = paidDaysExisting !== null
-            ? Math.min(elapsedWholeDays, paidDaysExisting)
-            : (Number.isFinite(lastPaidAtMs) ? Math.floor((lastPaidAtMs - purchaseMs) / MS_PER_DAY) : 0);
+            ? Math.min(effectiveEarnedDays, paidDaysExisting)
+            : (Number.isFinite(lastPaidAtMs) ? Math.max(0, Math.floor((lastPaidAtMs - purchaseMs) / MS_PER_DAY) - earningStartDay) : 0);
 
-        const cappedTotalDays = Math.min(durationDays, elapsedWholeDays);
+        const cappedTotalDays = Math.min(durationDays, effectiveEarnedDays);
         const payableDays = Math.max(0, cappedTotalDays - alreadyPaidDays);
+
 
         if (payableDays <= 0) continue;
 

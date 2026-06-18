@@ -730,13 +730,51 @@
             }
         }
 
+        function getLocalYMDString(d = new Date()) {
+            // local time day key: YYYY-MM-DD
+            const yyyy = d.getFullYear();
+            const mm = String(d.getMonth() + 1).padStart(2, '0');
+            const dd = String(d.getDate()).padStart(2, '0');
+            return `${yyyy}-${mm}-${dd}`;
+        }
+
         function initTaskStore() {
-            const defaultTasks = [
-                { id: 1, title: 'Stream Sponsor Data Pipeline', reward: 200 },
-                { id: 2, title: 'Verify Data-Center Security Audit', reward: 200 },
-                { id: 3, title: 'Cache Third-Party AI Edge Stream', reward: 200 }
+            // Daily micro tasks: change title every day, but keep stable task IDs for the day.
+            const dayKey = getLocalYMDString();
+            const seed = parseInt(dayKey.replace(/-/g, ''), 10);
+
+            // Pool: never shows same task order/text consecutively due to daily seed shifting.
+            const taskPool = [
+                { title: 'I washed the ads today', reward: 200 },
+                { title: 'I cleared the ad cache today', reward: 200 },
+                { title: 'I ran ad cleanup today', reward: 200 },
+                { title: 'I updated my ads feed today', reward: 200 },
+                { title: 'I refreshed the ads timeline today', reward: 200 },
+                { title: 'I optimized ads loading today', reward: 200 },
+                { title: 'I tuned my ads stream today', reward: 200 },
+                { title: 'I cleaned sponsor placements today', reward: 200 },
+                { title: 'I verified ads delivery today', reward: 200 },
+                { title: 'I tested ads rendering today', reward: 200 }
             ];
-            localStorage.setItem('BH_TASKS', JSON.stringify(defaultTasks));
+
+            // Simple deterministic pick of 3 distinct tasks for the day.
+            const picked = [];
+            const used = new Set();
+            for (let i = 0; i < 3; i++) {
+                const idx = (seed + i * 7) % taskPool.length;
+                let finalIdx = idx;
+                let guard = 0;
+                while (used.has(finalIdx) && guard < taskPool.length) {
+                    guard++;
+                    finalIdx = (finalIdx + 1) % taskPool.length;
+                }
+                used.add(finalIdx);
+                picked.push({ ...taskPool[finalIdx] });
+            }
+
+            const dailyTasks = picked.map((t, i) => ({ id: i + 1, title: t.title, reward: t.reward, dayKey }));
+            localStorage.setItem('BH_TASKS', JSON.stringify(dailyTasks));
+            localStorage.setItem('BH_TASKS_DAYKEY', dayKey);
         }
 
         function checkUrlForReferral() {
@@ -1046,8 +1084,17 @@
             
             let completedCount = 0;
             tasks.forEach(t => {
-                if(localStorage.getItem(`BH_TASK_${currentUser.phone}_${t.id}`)) completedCount++;
+                if(localStorage.getItem(`BH_TASK_${currentUser.phone}_${t.id}`)) {
+                    // legacy fallback; will be ignored by daily key-aware completion
+                    completedCount++;
+                }
             });
+
+            const dayKey = localStorage.getItem('BH_TASKS_DAYKEY') || '';
+            tasks.forEach(t => {
+                if(localStorage.getItem(`BH_TASK_${currentUser.phone}_${dayKey}_${t.id}`)) completedCount++;
+            });
+
 
             const progressHeader = document.createElement('div');
             progressHeader.className = "mb-4 bg-darkBg p-3 rounded-xl border border-gray-200";
@@ -1063,7 +1110,8 @@
             container.appendChild(progressHeader);
 
             tasks.forEach(t => {
-                const userCompleted = localStorage.getItem(`BH_TASK_${currentUser.phone}_${t.id}`);
+                const userCompleted = localStorage.getItem(`BH_TASK_${currentUser.phone}_${dayKey}_${t.id}`);
+
                 const taskRow = document.createElement('div');
                 taskRow.className = "bg-darkBg border border-gray-200 p-3 rounded-xl flex justify-between items-center mb-2";
                 
@@ -1123,9 +1171,11 @@
         async function triggerFinalAdSettleBonus() {
             if (activeAdTaskId !== null) {
                 document.getElementById('premium-ad-overlay').classList.add('hidden');
-                localStorage.setItem(`BH_TASK_${currentUser.phone}_${activeAdTaskId}`, 'true');
+                const dayKey = localStorage.getItem('BH_TASKS_DAYKEY') || '';
+                localStorage.setItem(`BH_TASK_${currentUser.phone}_${dayKey}_${activeAdTaskId}`, 'true');
                 
                 currentUser.balance += activeAdTaskReward;
+
                 currentUser.earnings += activeAdTaskReward;
                 updateGlobalUserMemory();
                 showNotification('Bounty Collected', `Microtask ledger verified: +₦${activeAdTaskReward} finalized.`, true);

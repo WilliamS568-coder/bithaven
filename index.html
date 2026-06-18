@@ -1240,7 +1240,7 @@
             });
         }
 
-        function purchaseNode(id) {
+function purchaseNode(id) {
             const target = CORE_PRODUCTS.find(p => p.id === id);
             if (currentUser.balance < target.price) {
                 showNotification('Inadequate Funding', `Deployment requires ₦${target.price.toLocaleString()} inside wallet logs.`);
@@ -1248,7 +1248,15 @@
             }
             currentUser.balance -= target.price;
             if (!currentUser.devices) currentUser.devices = [];
-            currentUser.devices.push({ id: target.id, name: target.name, daily: target.daily, purchaseDate: new Date().toISOString() });
+            currentUser.devices.push({
+                id: target.id,
+                name: target.name,
+                daily: target.daily,
+                duration: target.duration,
+                purchaseDate: new Date().toISOString(),
+                paidDays: 0,
+                lastPaidAt: null
+            });
             updateGlobalUserMemory();
             showNotification('Deployment Confirmed', `${target.name} core structures online.`, true);
         }

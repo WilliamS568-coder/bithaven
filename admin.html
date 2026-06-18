@@ -80,7 +80,7 @@
                     </tr>
                 </thead>
                 <tbody id="usersTable" class="text-sm">
-                    </tbody>
+                </tbody>
             </table>
         </div>
     </div>
@@ -89,7 +89,6 @@
 <script>
     let allUsers = [];
 
-    // Authentication Guard Routines
     function checkAdminAuth() {
         const sessionState = sessionStorage.getItem('BH_ADMIN_TOKEN');
         const authScreen = document.getElementById('admin-auth-screen');
@@ -98,7 +97,7 @@
         if (sessionState === 'AUTHORIZED_CORE_SYS') {
             authScreen.classList.add('hidden');
             mainWrapper.classList.remove('hidden');
-            fetchUsers(); // Run database load cycle only if authed
+            fetchUsers(); 
         } else {
             authScreen.classList.remove('hidden');
             mainWrapper.classList.add('hidden');
@@ -129,23 +128,23 @@
         checkAdminAuth();
     }
 
-    // 1. Load users and transaction bills array dynamically from database
     async function fetchUsers() {
         try {
             const response = await fetch('/api/admin/users');
             const result = await response.json();
             if (result.success) {
-                allUsers = result.users;
+                // server returns: { success: true, users: processedUsers }
+                allUsers = Array.isArray(result.users) ? result.users : [];
                 renderUsers(allUsers);
             } else {
-                alert("Failed to load user accounts database stream.");
+                alert(result.message || "Failed to load user accounts database stream.");
             }
+
         } catch (err) {
             console.error("Database connection failure:", err);
         }
     }
 
-    // 2. Process and render table layout including verification rows
     function renderUsers(users) {
         let html = '';
         users.forEach(user => {
@@ -155,7 +154,11 @@
                 userBillsHtml = `<div class="space-y-3">`;
                 user.bills.forEach(bill => {
                     const isApproved = bill.status === 'Approved' || bill.status === 'Success';
-                    const statusColor = isApproved ? 'text-green-600 font-bold' : 'text-amber-600 font-bold';
+                    const isRejected = bill.status === 'Rejected' || bill.status.includes('not confirm');
+                    
+                    let statusColor = 'text-amber-600 font-bold';
+                    if (isApproved) statusColor = 'text-green-600 font-bold';
+                    if (isRejected) statusColor = 'text-red-600 font-bold';
                     
                     userBillsHtml += `
                         <div class="bg-[#f8f9fa] p-3 rounded-xl border border-gray-200 text-xs">
@@ -166,7 +169,10 @@
                             <div class="mb-2 text-gray-700">Amount: <b class="text-gray-900 text-sm">₦${Number(bill.amount).toLocaleString()}</b></div>
                             <div class="flex gap-2">
                                 ${bill.proof_link ? `<a href="${bill.proof_link}" target="_blank" class="bg-blue-500 text-white px-2.5 py-1 rounded-lg text-[11px] font-medium hover:bg-blue-600 transition-colors">View Receipt</a>` : '<span class="text-gray-400 italic">No Attachment</span>'}
-                                ${!isApproved ? `<button onclick="approveRecharge('${user.phone}', '${bill.id}')" class="bg-[#C59B27] text-white font-bold px-2.5 py-1 rounded-lg text-[11px] hover:bg-[#A6801E] transition-colors">Approve Money</button>` : ''}
+                                ${(!isApproved && !isRejected) ? `
+                                    <button onclick="approveRecharge('${user.phone}', '${bill.id}')" class="bg-[#C59B27] text-white font-bold px-2.5 py-1 rounded-lg text-[11px] hover:bg-[#A6801E] transition-colors">Approve</button>
+                                    <button onclick="rejectRecharge('${user.phone}', '${bill.id}')" class="bg-red-500 text-white font-bold px-2.5 py-1 rounded-lg text-[11px] hover:bg-red-600 transition-colors">Reject</button>
+                                ` : ''}
                             </div>
                         </div>
                     `;
@@ -188,71 +194,98 @@
         document.getElementById('usersTable').innerHTML = html;
     }
 
-    // 3. Action function mapping to process verification approvals natively
     async function approveRecharge(phone, billId) {
         if (!confirm("Are you sure you want to approve this deposit receipt and credit the user?")) return;
-
         try {
-            const response = await fetch('/api/admin/approve-recharge', {
+            // Find target user reference
+            const response = await fetch('/api/user/' + phone);
+            const data = await response.json();
+            if (!data.success) return alert("User account contextual match dropped.");
+
+            let u = data.user;
+            let targetedBill = u.bills.find(b => b.id === billId);
+            if (targetedBill) {
+                targetedBill.status = "Approved";
+                u.balance = Number(u.balance) + Number(targetedBill.amount);
+            }
+
+            // Push state frame changes onto database backplane
+            const syncResponse = await fetch('/api/update-user', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    phone: phone,
-                    billId: billId
-                })
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(u)
             });
-
-            const result = await response.json();
-
-            if (result.success) {
+            const syncRes = await syncResponse.json();
+            if (syncRes.success) {
                 alert("Receipt approved successfully! User balance credited.");
-                fetchUsers(); 
-            } else {
-                alert("Approval execution issue: " + result.message);
+                fetchUsers();
             }
         } catch (err) {
             console.error(err);
-            alert("Network communications fail line on handler routine.");
         }
     }
 
-    // 4. Fallback handler route for explicit manual balance management overrides
+    async function rejectRecharge(phone, billId) {
+        if (!confirm("Are you sure you want to reject this confirmation receipt?")) return;
+        try {
+            const response = await fetch('/api/user/' + phone);
+            const data = await response.json();
+            if (!data.success) return alert("User account contextual match dropped.");
+
+            let u = data.user;
+            let targetedBill = u.bills.find(b => b.id === billId);
+            if (targetedBill) {
+                targetedBill.status = "Rejected";
+            }
+            
+            // Queue tracking notification parameters back into data schema
+            u.alertNotification = "their money was not confirm";
+
+            // Save modified structured parameters
+            const syncResponse = await fetch('/api/update-user', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(u)
+            });
+            const syncRes = await syncResponse.json();
+            if (syncRes.success) {
+                alert("Deposit log marked as Rejected. Notice scheduled for user's next active login window.");
+                fetchUsers();
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
     async function updateBalance() {
         const phone = document.getElementById('phone').value.trim();
         const balance = Number(document.getElementById('balance').value);
-
-        if (!phone) {
-            alert("Please input a reference account mobile track number.");
-            return;
-        }
+        if (!phone) return alert("Please input phone tracker identifier.");
 
         try {
-            const response = await fetch('/api/admin/update-balance', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ phone, balance })
-            });
+            const response = await fetch('/api/user/' + phone);
+            const data = await response.json();
+            if (!data.success) return alert("Target context user data dropped.");
 
-            const result = await response.json();
-            if (result.success) {
+            let u = data.user;
+            u.balance = balance;
+
+            const syncResponse = await fetch('/api/update-user', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(u)
+            });
+            if ((await syncResponse.json()).success) {
                 alert("Account base transaction balance set modified.");
                 document.getElementById('phone').value = '';
                 document.getElementById('balance').value = '';
                 fetchUsers();
-            } else {
-                alert("Error setting manually override value: " + result.message);
             }
         } catch (err) {
             console.error(err);
-            alert("Communication framework failed tracking post request block.");
         }
     }
 
-    // Trigger state check on layout mount execution
     checkAdminAuth();
 </script>
 

@@ -213,6 +213,56 @@ app.post('/api/update-user', async (req, res) => {
     }
 });
 
+function settleProductDailyEarnings(user, nowMs = Date.now()) {
+    user.balance = Number(user.balance ?? 1000);
+    user.earnings = Number(user.earnings ?? 0);
+
+    if (!Array.isArray(user.devices)) return;
+
+    const MS_PER_DAY = 24 * 60 * 60 * 1000;
+
+    // Settles once per whole day per device, capped by duration.
+    for (const dev of user.devices) {
+        if (!dev || !dev.purchaseDate) continue;
+
+        const purchaseMs = new Date(dev.purchaseDate).getTime();
+        if (!Number.isFinite(purchaseMs)) continue;
+
+        const durationDays = Number(dev.duration ?? 30);
+        const daily = Number(dev.daily ?? 0);
+        if (!daily || durationDays <= 0) continue;
+
+        // Guard fields for repeat protection
+        // - lastPaidAt: timestamp (ms) when we last credited
+        // - paidDays: number of whole days already credited
+        // If missing, derive paidDays as 0.
+        const paidDaysExisting = dev.paidDays !== undefined && dev.paidDays !== null
+            ? Math.max(0, Number(dev.paidDays))
+            : null;
+
+        const lastPaidAtMs = dev.lastPaidAt ? new Date(dev.lastPaidAt).getTime() : null;
+
+        const elapsedWholeDays = Math.floor((nowMs - purchaseMs) / MS_PER_DAY);
+        if (elapsedWholeDays <= 0) continue;
+
+        const alreadyPaidDays = paidDaysExisting !== null
+            ? Math.min(elapsedWholeDays, paidDaysExisting)
+            : (Number.isFinite(lastPaidAtMs) ? Math.floor((lastPaidAtMs - purchaseMs) / MS_PER_DAY) : 0);
+
+        const cappedTotalDays = Math.min(durationDays, elapsedWholeDays);
+        const payableDays = Math.max(0, cappedTotalDays - alreadyPaidDays);
+
+        if (payableDays <= 0) continue;
+
+        const payout = payableDays * daily;
+        user.balance += payout;
+        user.earnings += payout;
+
+        dev.paidDays = alreadyPaidDays + payableDays;
+        dev.lastPaidAt = new Date(nowMs).toISOString();
+    }
+}
+
 app.get('/api/user/:phone', async (req, res) => {
     try {
         const { data: user } = await supabase.from(TABLE_NAME).select('*').eq('phone', req.params.phone).maybeSingle();
@@ -227,10 +277,29 @@ app.get('/api/user/:phone', async (req, res) => {
         try { user.bills = typeof user.bills === 'string' ? JSON.parse(user.bills) : (user.bills || []); } catch(e) { user.bills = []; }
         try { user.bank_card = typeof user.bank_card === 'string' && user.bank_card !== '' ? JSON.parse(user.bank_card) : null; } catch(e) { user.bank_card = null; }
 
+        // Daily earnings settlement (lazy-credit on read)
+        const beforeBalance = Number(user.balance);
+        settleProductDailyEarnings(user);
+
+        // Persist settlement changes back to DB (if any)
+        const afterBalance = Number(user.balance);
+        if (afterBalance !== beforeBalance) {
+            const { error: persistErr } = await supabase
+                .from(TABLE_NAME)
+                .update({
+                    balance: afterBalance,
+                    earnings: Number(user.earnings),
+                    devices: Array.isArray(user.devices) ? JSON.stringify(user.devices) : user.devices
+                })
+                .eq('phone', req.params.phone);
+
+            if (persistErr) throw persistErr;
+        }
+
         delete user.password;
         return res.json({ success: true, user });
     } catch (e) {
-        return res.status(500).json({ success: false });
+        return res.status(500).json({ success: false, message: e.message || 'Failed to fetch user' });
     }
 });
 

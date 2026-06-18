@@ -71,7 +71,8 @@ app.post('/api/upload-receipt', upload.single('receipt'), async (req, res) => {
 // --- 5. AUTHENTICATION & CORE APP APIS ---
 app.post('/api/register', async (req, res) => {
     try {
-        let { phone, password, pin, referralCode } = req.body;
+        let { phone, password, pin, referralCode, referral_code_used } = req.body;
+        referralCode = referralCode || referral_code_used;
         if (!phone || !password || !pin) {
             return res.status(400).json({ success: false, message: 'Please fill out all required fields.' });
         }
@@ -282,8 +283,39 @@ app.post('/api/admin/approve-recharge', async (req, res) => {
 
         const depositAmount = Number(bills[billIndex].amount || 0);
         bills[billIndex].status = 'Approved';
+
+        // 1) Credit the depositing user
         const newBalance = Number(user.balance || 0) + depositAmount;
 
+        // 2) Referral bonus (+₦200) to the referrer (if any)
+        //    NOTE: We pay only once per bill approval using the fact we just set status to Approved.
+        //    Your bill object does not include a dedicated reward flag, so this is our best guard.
+        const referrerCodeOrNull = user.referred_by ? String(user.referred_by).trim() : null;
+        let referralCredited = false;
+
+        if (referrerCodeOrNull) {
+            const { data: referrer } = await supabase
+                .from(TABLE_NAME)
+                .select('phone, balance, earnings')
+                .eq('referral_code', referrerCodeOrNull)
+                .maybeSingle();
+
+            if (referrer) {
+                const bonus = 200;
+                const refNewBalance = Number(referrer.balance || 0) + bonus;
+                const refNewEarnings = Number(referrer.earnings || 0) + bonus;
+
+                const { error: refUpdateErr } = await supabase
+                    .from(TABLE_NAME)
+                    .update({ balance: refNewBalance, earnings: refNewEarnings })
+                    .eq('phone', referrer.phone);
+
+                if (refUpdateErr) throw refUpdateErr;
+                referralCredited = true;
+            }
+        }
+
+        // Persist bill approval + updated depositing user's balance
         const { error: updateErr } = await supabase
             .from(TABLE_NAME)
             .update({
@@ -294,7 +326,12 @@ app.post('/api/admin/approve-recharge', async (req, res) => {
 
         if (updateErr) throw updateErr;
 
-        return res.json({ success: true, message: 'Receipt approved and ledger balance updated!' });
+        return res.json({
+            success: true,
+            message: referralCredited
+                ? 'Receipt approved, depositor credited, and referral bonus (+₦200) paid!'
+                : 'Receipt approved and ledger balance updated!'
+        });
     } catch (err) {
         console.error(err);
         return res.status(500).json({ success: false, message: err.message });

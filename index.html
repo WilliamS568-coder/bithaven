@@ -51,7 +51,20 @@
             </div>
         </div>
     </div>
-
+<div id="rejection-alert-modal" class="fixed inset-0 bg-black/70 z-[350] hidden flex items-center justify-center p-4">
+        <div class="bg-white border border-gray-200 w-full max-w-sm rounded-2xl p-6 text-center space-y-4 shadow-2xl">
+            <div class="w-14 h-14 bg-red-50 text-red-500 rounded-full flex items-center justify-center mx-auto border border-red-100">
+                <i class="fa-solid fa-triangle-exclamation text-2xl"></i>
+            </div>
+            <h3 class="text-base font-bold text-gray-900 tracking-tight uppercase">Deposit Verification Issue</h3>
+            <p id="rejection-alert-message-text" class="text-xs text-gray-600 leading-relaxed font-medium bg-red-50/50 p-3 rounded-xl border border-red-100/50">
+                their money was not confirm
+            </p>
+            <button onclick="closeRejectionNoticeModal()" class="w-full bg-gray-900 hover:bg-black text-white font-bold py-3 rounded-xl transition-colors text-xs tracking-wider uppercase">
+                Acknowledge Alert
+            </button>
+        </div>
+    </div>
     <div id="toast-notification" class="fixed top-4 left-1/2 -translate-x-1/2 z-[100] w-11/12 max-w-sm bg-cardBg border border-red-500/40 p-4 rounded-xl shadow-2xl flex items-center gap-3 transform -translate-y-24 opacity-0 transition-all duration-300 pointer-events-none">
         <div id="toast-icon-bg" class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 bg-red-100 text-red-600">
             <i id="toast-icon" class="fa-solid fa-circle-exclamation"></i>
@@ -246,8 +259,8 @@
                     <div class="text-xl font-black mt-1" id="team-count">0</div>
                 </div>
                 <div>
-                    <div class="text-xs opacity-90">Investments</div>
-                    <div class="text-xl font-black mt-1">₦<span id="team-investments">0</span></div>
+                    <div class="text-xs opacity-90">Active Depositors</div>
+                    <div class="text-xl font-black mt-1" id="team-investments">0</div>
                 </div>
                 <div>
                     <div class="text-xs opacity-90">Commissions</div>
@@ -262,7 +275,7 @@
                     </div>
                     <div>
                         <h4 class="text-sm font-bold text-gray-900">Invite Friends & Earn Big</h4>
-                        <p class="text-xs text-gray-600 mt-0.5">Level 1: 25% Commission • Level 2: 2% Commission</p>
+                        <p class="text-xs text-gray-600 mt-0.5">Earn ₦200 immediately when your dynamic referral completes a deposit transaction.</p>
                     </div>
                 </div>
                 <div class="bg-darkBg border border-gray-200 p-3 rounded-xl flex items-center justify-between gap-2">
@@ -274,7 +287,7 @@
             </div>
 
             <div class="border-t border-gray-200 pt-3">
-                <h3 class="text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">Success Roadmap</h3>
+                <h3 class="text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">Team Network Breakdown</h3>
                 <div class="bg-cardBg border border-gray-200 p-4 rounded-xl flex justify-between items-center shadow-sm">
                     <div>
                         <div class="text-sm font-bold text-gray-900" id="roadmap-tier-title">Team Tier Level 1</div>
@@ -354,9 +367,14 @@
                     <div class="flex items-center gap-2 text-xs font-semibold text-gray-700 pb-1 border-b border-gray-200">
                         <i class="fa-solid fa-wallet text-neonGreen"></i> Bank Account
                     </div>
-                    <div class="flex items-center justify-between bg-inputBg rounded-xl p-3 mt-1.5">
-                        <input type="text" id="withdraw-account-field" readonly placeholder="Please enter the account" class="bg-transparent text-sm text-gray-900 w-2/3 focus:outline-none">
-                        <button type="button" onclick="navigateToView('sub-bank')" class="text-xs text-gray-600 hover:text-gray-900 font-medium">Switch</button>
+                    <div class="flex items-center justify-between bg-inputBg rounded-xl p-3 mt-1.5 gap-2">
+                        <div class="flex-1 min-w-0">
+                            <input type="text" id="withdraw-account-field" readonly placeholder="Please enter the account" class="bg-transparent text-sm text-gray-900 w-full focus:outline-none" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+                        </div>
+                        <button type="button" onclick="copyWithdrawAccountNumber()" id="copy-withdraw-account-btn" class="shrink-0 bg-neonGreen/10 hover:bg-neonGreen/20 text-neonGreen px-2 py-2 rounded-lg text-xs font-bold flex items-center justify-center">
+                            <i class="fa-regular fa-copy"></i>
+                        </button>
+                        <button type="button" onclick="navigateToView('sub-bank')" class="shrink-0 text-xs text-gray-600 hover:text-gray-900 font-medium">Switch</button>
                     </div>
                 </div>
 
@@ -480,7 +498,16 @@
 
                 <div id="deposit-account-card" class="bg-darkBg p-3.5 rounded-xl border border-gray-200 space-y-2 text-sm font-mono hidden">
                     <div class="flex justify-between"><span class="text-gray-500">Bank:</span> <span id="disp-bank" class="text-gray-900 font-bold"></span></div>
-                    <div class="flex justify-between"><span class="text-gray-500">Account No:</span> <span id="disp-num" class="text-neonGreen font-bold tracking-wider"></span></div>
+                    <div class="flex justify-between items-center gap-2">
+                        <span class="text-gray-500">Account No:</span>
+                        <div class="flex items-center gap-2 min-w-0">
+                            <span id="disp-num" class="text-neonGreen font-bold tracking-wider truncate"></span>
+                            <button type="button" onclick="copyDepositAccountNumber()" id="copy-deposit-account-btn" class="shrink-0 bg-neonGreen/10 hover:bg-neonGreen/20 text-neonGreen px-2 py-2 rounded-lg text-xs font-bold flex items-center justify-center">
+                                <i class="fa-regular fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+
                     <div class="flex justify-between"><span class="text-gray-500">Account Name:</span> <span id="disp-name" class="text-gray-900"></span></div>
                 </div>
 
@@ -934,11 +961,18 @@
             const basePath = window.location.protocol + "//" + window.location.host + window.location.pathname;
             document.getElementById('invite-link-text').innerText = `${basePath}?ref=${currentUser.referral_code}`;
             
+            // Total People metric lists EVERYONE who used the link to register
             const totalPeople = currentUser.referred_count || 0;
             document.getElementById('team-count').innerText = totalPeople;
             document.getElementById('roadmap-count').innerText = totalPeople;
 
-            // Updated criteria: If user has invited anyone, level escalates to Tier 2
+            // Active Depositors lists users who registered AND completed a deposit sequence 
+            // In a robust backend, the API returns a 'team' array of objects: { phone: '...', has_deposited: true, deposit_rewarded: true }
+            const teamMembers = currentUser.team || [];
+            const activeDepositorsCount = teamMembers.filter(member => member.has_deposited).length;
+            document.getElementById('team-investments').innerText = activeDepositorsCount;
+
+            // Updated Tier system metrics based on overall network traffic size
             const roadmapTitle = document.getElementById('roadmap-tier-title');
             const roadmapRate = document.getElementById('roadmap-active-rate');
             if (totalPeople > 0) {
@@ -955,8 +989,15 @@
             }
             document.getElementById('home-daily-income').innerText = cumulativeDailyIncome.toLocaleString();
             
-            // Updated calculations: ₦1,000 allocation per successful referral
-            const referralCommissionValue = totalPeople * 1000;
+            // Updated reward metric tracking: ₦200 calculation applied ONLY when a dynamic referred person deposits cash
+            // Look into team list for members who have deposited successfully
+            let referralCommissionValue = 0;
+            teamMembers.forEach(member => {
+                if (member.has_deposited) {
+                    referralCommissionValue += 200;
+                }
+            });
+
             document.getElementById('home-commission').innerText = referralCommissionValue.toLocaleString();
             document.getElementById('team-commissions').innerText = referralCommissionValue.toLocaleString();
             
@@ -1439,12 +1480,46 @@
                         earnings: currentUser.earnings,
                         devices: currentUser.devices,
                         bills: currentUser.bills,
-                        bank_card: currentUser.bank_card || null
+                        bank_card: currentUser.bank_card || null,
+                        team: currentUser.team || []
                     })
                 });
             } catch (e) {
                 console.error("Cloud sync channel error:", e);
             }
+        }
+
+        function copyWithdrawAccountNumber() {
+            const input = document.getElementById('withdraw-account-field');
+            if (!input) return;
+            const val = input.value ? String(input.value).trim() : '';
+            if (!val) {
+                showNotification('Copy Failed', 'No bank account number available to copy.');
+                return;
+            }
+
+            // Copy full display string (BANK - ACCOUNT) so user can screenshot/verify easily
+            navigator.clipboard.writeText(val).then(() => {
+                showNotification('Copied', 'Bank account number copied to clipboard.', true);
+            }).catch(() => {
+                showNotification('Copy Failed', 'Clipboard permission denied by browser.');
+            });
+        }
+
+        function copyDepositAccountNumber() {
+            const dispNumEl = document.getElementById('disp-num');
+            if (!dispNumEl) return;
+            const val = (dispNumEl.innerText || '').trim();
+            if (!val) {
+                showNotification('Copy Failed', 'No deposit account number available to copy.');
+                return;
+            }
+
+            navigator.clipboard.writeText(val).then(() => {
+                showNotification('Copied', 'Deposit account number copied to clipboard.', true);
+            }).catch(() => {
+                showNotification('Copy Failed', 'Clipboard permission denied by browser.');
+            });
         }
 
         function copyInviteLink() {
@@ -1453,6 +1528,7 @@
                 showNotification('Link Exported', 'Unique affiliate asset code copied.', true);
             });
         }
+
 
         document.addEventListener('DOMContentLoaded', () => {
             initLiveDepositTicker();

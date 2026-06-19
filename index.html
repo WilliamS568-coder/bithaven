@@ -609,6 +609,7 @@
 
         let activeAdTaskId = null;
         let activeAdTaskReward = 0;
+        let hasWatchedAdInSession = false;
 
         // Inactivity Tracker State Variable
         let inactivityTimer = null;
@@ -1135,6 +1136,11 @@
 
         function startTaskWorkflow(id, reward) {
             if (!currentUser) return;
+            if (hasWatchedAdInSession) {
+                alert("Please refresh the browser to continue.");
+                showNotification('Refresh Required', 'Please refresh the browser to watch another ad.');
+                return;
+            }
             if (activeAdTaskId !== null) return; // Guard against multiple ad overlays simultaneously
 
             activeAdTaskId = id;
@@ -1186,6 +1192,7 @@
                 
                 activeAdTaskId = null;
                 activeAdTaskReward = 0;
+                hasWatchedAdInSession = true;
             }
         }
 

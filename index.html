@@ -1075,6 +1075,10 @@
                     activeNavBtn.classList.add('text-neonGreen');
                     activeNavBtn.classList.remove('text-gray-400');
                 }
+                // Trigger Telegram modal only when Home tab is active
+                if (!isSubpanel && tabId === 'home') {
+                    setTimeout(openTelegramModal, 800);
+                }
             }
         }
 

@@ -610,6 +610,8 @@
         let activeAdTaskId = null;
         let activeAdTaskReward = 0;
         let activeAdTaskShouldReward = false;
+        let isAdRunning = false;
+
 
 
         // Inactivity Tracker State Variable
@@ -1145,15 +1147,16 @@
             const canReward = prev < 3;
 
             // Prevent stacking multiple overlays/intervals.
-            const overlay = document.getElementById('premium-ad-overlay');
-            if (overlay && !overlay.classList.contains('hidden')) {
-                return;
-            }
+            if (isAdRunning) return;
+
 
             // Track for claim: store whether this run should be rewarded.
             activeAdTaskId = id;
             activeAdTaskReward = reward;
             activeAdTaskShouldReward = canReward;
+
+            // Mark ad running for guard.
+            isAdRunning = true;
 
             if (canReward) {
                 localStorage.setItem(cntKey, String(prev + 1));
@@ -1162,7 +1165,10 @@
 
 
 
+            
+            
             const timerBadge = document.getElementById('ad-timer-badge');
+
             const claimWrapper = document.getElementById('ad-claim-action-placeholder');
             const adHolder = document.getElementById('ad-frame-holder');
 
@@ -1185,12 +1191,16 @@
                 timeLeft--;
                 if (timeLeft <= 0) {
                     clearInterval(adInterval);
+                    // Ad finished; allow next clicks.
+                    isAdRunning = false;
                     timerBadge.classList.add('hidden');
                     claimWrapper.classList.remove('hidden');
                 } else {
                     timerBadge.innerText = `${timeLeft}s Remaining`;
                 }
+
             }, 1000);
+
         }
 
         async function triggerFinalAdSettleBonus() {
@@ -1212,7 +1222,12 @@
                 
                 activeAdTaskId = null;
                 activeAdTaskReward = 0;
+                activeAdTaskShouldReward = false;
+            
+                // Claim done; allow next tasks.
+                isAdRunning = false;
             }
+
         }
 
         function navigateToView(subPanelId) {

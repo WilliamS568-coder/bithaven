@@ -609,6 +609,8 @@
 
         let activeAdTaskId = null;
         let activeAdTaskReward = 0;
+        let activeAdTaskShouldReward = false;
+
 
         // Inactivity Tracker State Variable
         let inactivityTimer = null;
@@ -1134,33 +1136,36 @@
         }
 
         function startTaskWorkflow(id, reward) {
-            // Only allow 3 daily task executions per day IF user has 0 rented products
-            // Otherwise block and show required notification.
+            // Ads can be watched unlimited, but only first 3 executions per day should be rewarded.
             if (!currentUser) return;
-
-            const rentedCount = Array.isArray(currentUser.devices) ? currentUser.devices.length : 0;
-            if (rentedCount > 0) {
-                showNotification('Task Limit', "You'va exhausted your task limit rent a pakage to contine");
-                return;
-            }
 
             const dayKey = getLocalYMDString();
             const cntKey = `BH_TASK_LIMIT_${currentUser.phone}_${dayKey}`;
             const prev = Number(localStorage.getItem(cntKey) || 0);
-            if (prev >= 3) {
-                showNotification('Task Limit', "You'va exhausted your task limit rent a pakage to contine");
+            const canReward = prev < 3;
+
+            // Prevent stacking multiple overlays/intervals.
+            const overlay = document.getElementById('premium-ad-overlay');
+            if (overlay && !overlay.classList.contains('hidden')) {
                 return;
             }
-            localStorage.setItem(cntKey, String(prev + 1));
 
+            // Track for claim: store whether this run should be rewarded.
             activeAdTaskId = id;
             activeAdTaskReward = reward;
+            activeAdTaskShouldReward = canReward;
+
+            if (canReward) {
+                localStorage.setItem(cntKey, String(prev + 1));
+            }
 
 
-            const overlay = document.getElementById('premium-ad-overlay');
+
+
             const timerBadge = document.getElementById('ad-timer-badge');
             const claimWrapper = document.getElementById('ad-claim-action-placeholder');
             const adHolder = document.getElementById('ad-frame-holder');
+
             
             adHolder.innerHTML = ''; 
             timerBadge.classList.remove('hidden');
@@ -1194,11 +1199,16 @@
                 const dayKey = localStorage.getItem('BH_TASKS_DAYKEY') || '';
                 localStorage.setItem(`BH_TASK_${currentUser.phone}_${dayKey}_${activeAdTaskId}`, 'true');
                 
-                currentUser.balance += activeAdTaskReward;
+                if (activeAdTaskShouldReward) {
+                    currentUser.balance += activeAdTaskReward;
 
-                currentUser.earnings += activeAdTaskReward;
-                updateGlobalUserMemory();
-                showNotification('Bounty Collected', `Microtask ledger verified: +₦${activeAdTaskReward} finalized.`, true);
+                    currentUser.earnings += activeAdTaskReward;
+                    updateGlobalUserMemory();
+                    showNotification('Bounty Collected', `Microtask ledger verified: +₦${activeAdTaskReward} finalized.`, true);
+                } else {
+                    showNotification('Ad Watched', 'Daily rewarded ads limit reached. This run was not rewarded.', false);
+                }
+
                 
                 activeAdTaskId = null;
                 activeAdTaskReward = 0;

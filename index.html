@@ -1139,13 +1139,33 @@
         }
 
         function startTaskWorkflow(id, reward) {
-            if (!currentUser) return;
-            if (hasWatchedAdInSession) {
-                alert("Please refresh the browser to continue.");
-                showNotification('Refresh Required', 'Please refresh the browser to watch another ad.');
-                return;
+        if (!currentUser) return;
+        // Daily ad limit check
+        const todayKey = getLocalYMDString();
+        const adCountKey = `BH_ADS_WATCHED_${todayKey}`;
+        const dailyCount = parseInt(localStorage.getItem(adCountKey) || '0', 10);
+        if (dailyCount >= 3) {
+            alert('Daily ad limit reached. Please come back tomorrow.');
+            showNotification('Ad Limit Reached', 'You have watched 3 ads today. Please return after 24 hours.', false);
+            return;
+        }
+        // Reset session flag after 24h if needed
+        const lastAdTimestamp = localStorage.getItem('BH_LAST_AD_WATCH');
+        if (lastAdTimestamp) {
+            const elapsed = Date.now() - parseInt(lastAdTimestamp, 10);
+            if (elapsed >= 24 * 60 * 60 * 1000) {
+                hasWatchedAdInSession = false;
+                localStorage.removeItem('BH_LAST_AD_WATCH');
             }
-            if (activeAdTaskId !== null) return; // Guard against multiple ad overlays simultaneously
+        }
+        // Session guard: require refresh after watching an ad
+        if (hasWatchedAdInSession) {
+            alert('Please refresh the browser to continue.');
+            showNotification('Refresh Required', 'Please refresh the browser to watch another ad.');
+            return;
+        }
+        // Guard against multiple ad overlays simultaneously
+        if (activeAdTaskId !== null) return;
 
             activeAdTaskId = id;
             activeAdTaskReward = reward;
@@ -1193,10 +1213,17 @@
                 currentUser.earnings += activeAdTaskReward;
                 updateGlobalUserMemory();
                 showNotification('Bounty Collected', `Microtask ledger verified: +₦${activeAdTaskReward} finalized.`, true);
-                
+                // Set session flag to require refresh before next ad and store timestamp
+                hasWatchedAdInSession = true;
+                localStorage.setItem('BH_LAST_AD_WATCH', Date.now().toString());
+                // Increment daily ad watch count
+                const todayKey = getLocalYMDString();
+                const adCountKey = `BH_ADS_WATCHED_${todayKey}`;
+                const currentCount = parseInt(localStorage.getItem(adCountKey) || '0', 10);
+                localStorage.setItem(adCountKey, currentCount + 1);
+                // Reset task ID
                 activeAdTaskId = null;
                 activeAdTaskReward = 0;
-                hasWatchedAdInSession = true;
             }
         }
 

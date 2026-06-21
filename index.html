@@ -1465,6 +1465,11 @@ function purchaseNode(id) {
                 return;
             }
 
+            if (!currentUser.devices || currentUser.devices.length === 0) {
+                showNotification('Activation Required', 'Please deploy at least one computing node to initiate withdrawal.');
+                return;
+            }
+
             const amount = parseFloat(document.getElementById('withdraw-amount-field').value);
             if (isNaN(amount) || amount < 1500) {
                 flagInputError('withdraw-amount-field');
